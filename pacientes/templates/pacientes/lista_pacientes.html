@@ -1,34 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <a href="/pacientes/crear/">
-    Crear Paciente
-</a>
     <title>Lista de Pacientes</title>
 </head>
+
 <body>
 
 <h1>Pacientes</h1>
 
+<!-- 🔹 Información del usuario logueado -->
+<p>
+    Usuario: <strong>{{ request.user.username }}</strong>
+</p>
+
+<p>
+    Rol: <strong>{{ rol }}</strong>
+</p>
+
+<hr>
+
+<!-- Botón crear -->
+<a href="/pacientes/crear/">
+    Crear Paciente
+</a>
+
+<hr>
+
 <ul>
-    <!-- 🔹 Recorre todos los pacientes enviados desde views.py -->
     {% for paciente in pacientes %}
     
         <li>
-             {{ paciente.tipo_documento }} - {{ paciente.identificacion }}
-             {{ paciente.nombre }} {{ paciente.apellido }}
-            
-             <!-- Enlace para editar -->
-             <a href="/pacientes/editar/{{ paciente.id }}/"> 
-              Editar
-             </a>
-             <!-- Enlace para eliminar -->
-             <a href="/pacientes/eliminar/{{ paciente.id }}/">
-             Eliminar
-             </a>
+            {{ paciente.tipo_documento }} - {{ paciente.identificacion }}
+            {{ paciente.nombre }} {{ paciente.apellido }}
+
+            <br><br>
+
+            <!-- Auditoría (quién creó) -->
+            Creado por:
+            {% if paciente.creado_por %}
+                {{ paciente.creado_por.username }}
+            {% else %}
+                Sistema
+            {% endif %}
+
+            <br>
+
+            <!-- Auditoría (quién editó) -->
+            Actualizado por:
+            {% if paciente.actualizado_por %}
+                {{ paciente.actualizado_por.username }}
+            {% else %}
+                Nunca editado
+            {% endif %}
+
+            <br><br>
+
+            <!-- Acciones -->
+            <a href="/pacientes/editar/{{ paciente.id }}/">Editar</a>
+            |
+            <a href="/pacientes/eliminar/{{ paciente.id }}/">Eliminar</a>
 
         </li>
 
+        <hr>
 
     {% endfor %}
 </ul>

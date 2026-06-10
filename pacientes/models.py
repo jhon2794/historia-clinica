@@ -1,7 +1,25 @@
 from django.db import models
-from django.db import models
+from django.contrib.auth.models import User
 
 class Paciente(models.Model):
+    nombre = models.CharField(max_length=100)
+    
+    creado_por = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="pacientes_creados"
+    )
+
+    actualizado_por = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="pacientes_actualizados"
+    )
+
     # Tipo de documento
     tipo_documento = models.CharField(max_length=5)
    # Número de identificación

@@ -1,0 +1,31 @@
+<h1>Editar Evolución</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="date" name="fecha" value="{{ evolucion.fecha }}">
+
+    <textarea name="motivo_consulta">{{ evolucion.motivo_consulta }}</textarea>
+
+    <textarea name="observaciones">{{ evolucion.observaciones }}</textarea>
+
+    <textarea name="diagnostico">{{ evolucion.diagnostico }}</textarea>
+
+    <textarea name="conducta">{{ evolucion.conducta }}</textarea>
+
+    <input type="number" step="0.1" name="temperatura" value="{{ evolucion.temperatura }}">
+
+    <input type="number" name="frecuencia_cardiaca" value="{{ evolucion.frecuencia_cardiaca }}">
+
+    <input type="number" name="frecuencia_respiratoria" value="{{ evolucion.frecuencia_respiratoria }}">
+
+    <input type="text" name="presion_arterial" value="{{ evolucion.presion_arterial }}">
+
+    <input type="number" name="saturacion" value="{{ evolucion.saturacion }}">
+
+    <input type="number" step="0.01" name="peso" value="{{ evolucion.peso }}">
+
+    <input type="number" step="0.01" name="talla" value="{{ evolucion.talla }}">
+
+    <button type="submit">Actualizar</button>
+</form>

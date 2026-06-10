@@ -18,4 +18,8 @@ urlpatterns = [
     path('evoluciones/<int:historia_id>/',views.lista_evoluciones,name='lista_evoluciones'),
     # Crear evolución para una historia
     path('evoluciones/crear/<int:historia_id>/',views.crear_evolucion,name='crear_evolucion'),
+    # Editar evolución
+    path('evoluciones/editar/<int:evolucion_id>/',views.editar_evolucion,name='editar_evolucion'),
+    # Eliminar evolución
+    path('evoluciones/eliminar/<int:evolucion_id>/',views.eliminar_evolucion,name='eliminar_evolucion'),
 ]

@@ -22,6 +22,14 @@
 
             {{ evolucion.diagnostico }}
 
+            <a href="/evoluciones/editar/{{ evolucion.id }}/">
+             Editar
+            </a>
+
+            <a href="/evoluciones/eliminar/{{ evolucion.id }}/">
+             Eliminar
+            </a>
+
         </li>
 
     {% empty %}

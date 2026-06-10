@@ -9,44 +9,49 @@ def lista_pacientes(request):
     # 🔹 Trae todos los pacientes de la base de datos
     # SQL equivalente: SELECT * FROM paciente;
     pacientes = Paciente.objects.all()
+    # detectar rol
+    rol = None
+
+    if request.user.groups.filter(name="medico").exists():
+        rol = "medico"
+    elif request.user.groups.filter(name="enfermero").exists():
+        rol = "enfermero"
+    elif request.user.groups.filter(name="admin").exists():
+        rol = "admin"
 
     # 🔹 Envía los datos al template HTML
     # 'pacientes' será la variable disponible en el HTML
-    return render(
-        request,
-        'pacientes/lista_pacientes.html',
-        {
-            'pacientes': pacientes  # lista de pacientes
-        }
-    )
+    return render(request, "pacientes/lista_pacientes.html", {
+    "rol": rol
+})
+
+from django.shortcuts import render, redirect
+from .models import Paciente
 
 def crear_paciente(request):
 
-    # Si el usuario envió el formulario
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        # Obtiene los datos del formulario
-        tipo_documento = request.POST['tipo_documento']
-        identificacion = request.POST['identificacion']
-        nombre = request.POST['nombre']
-        apellido = request.POST['apellido']
-        fecha_nacimiento = request.POST['fecha_nacimiento']
-        sexo = request.POST['sexo']
+        tipo_documento = request.POST["tipo_documento"]
+        identificacion = request.POST["identificacion"]
+        nombre = request.POST["nombre"]
+        apellido = request.POST["apellido"]
+        fecha_nacimiento = request.POST["fecha_nacimiento"]
+        sexo = request.POST["sexo"]
 
         Paciente.objects.create(
-       tipo_documento=tipo_documento,
-       identificacion=identificacion,
-       nombre=request.POST['nombre'],
-       apellido=request.POST['apellido'],
-       fecha_nacimiento=request.POST['fecha_nacimiento'])
+            tipo_documento=tipo_documento,
+            identificacion=identificacion,
+            nombre=nombre,
+            apellido=apellido,
+            fecha_nacimiento=fecha_nacimiento,
+            sexo=sexo,
+            creado_por=request.user
+        )
 
-       
+        return redirect("lista_pacientes")
 
-        # Regresa al listado
-        return redirect('lista_pacientes')
-
-    # Si entra por primera vez muestra el formulario
-    return render(request, 'pacientes/crear_paciente.html')
+    return render(request, "pacientes/crear_paciente.html")
 
 def editar_paciente(request, id):
 
@@ -63,6 +68,8 @@ def editar_paciente(request, id):
         paciente.apellido = request.POST['apellido']
         paciente.fecha_nacimiento = request.POST['fecha_nacimiento']
         paciente.sexo = request.POST['sexo']
+
+        actualizado_por = request.user
 
         # Guarda cambios
         paciente.save()
@@ -288,3 +295,47 @@ def crear_evolucion(request, historia_id):
             'historia': historia
         }
     )
+def editar_evolucion(request, evolucion_id):
+
+    evolucion = Evolucion.objects.get(id=evolucion_id)
+
+    if request.method == 'POST':
+
+        evolucion.fecha = request.POST['fecha']
+        evolucion.motivo_consulta = request.POST['motivo_consulta']
+        evolucion.observaciones = request.POST['observaciones']
+        evolucion.diagnostico = request.POST['diagnostico']
+        evolucion.conducta = request.POST['conducta']
+        evolucion.temperatura = request.POST['temperatura']
+        evolucion.frecuencia_cardiaca = request.POST['frecuencia_cardiaca']
+        evolucion.frecuencia_respiratoria = request.POST['frecuencia_respiratoria']
+        evolucion.presion_arterial = request.POST['presion_arterial']
+        evolucion.saturacion = request.POST['saturacion']
+        evolucion.peso = request.POST['peso']
+        evolucion.talla = request.POST['talla']
+
+        evolucion.save()
+
+        return redirect(
+            'lista_evoluciones',
+            historia_id=evolucion.historia.id
+        )
+
+    return render(
+        request,
+        'pacientes/editar_evolucion.html',
+        {'evolucion': evolucion}
+    )
+    
+def eliminar_evolucion(request, evolucion_id):
+
+    evolucion = Evolucion.objects.get(id=evolucion_id)
+
+    historia_id = evolucion.historia.id
+
+    evolucion.delete()
+
+    return redirect(
+        'lista_evoluciones',
+        historia_id=historia_id
+    )    
