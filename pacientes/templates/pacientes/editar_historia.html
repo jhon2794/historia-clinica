@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Historia Clínica</title>
+</head>
+<body>
+
+    <h1>Editar Historia Clínica</h1>
+
+    <!-- Formulario para actualizar la historia -->
+    <form method="POST">
+
+        {% csrf_token %} 
+
+        <br>
+
+        <!-- Fecha de apertura -->
+        <div>
+            <label>Fecha Apertura:</label>
+            <input
+                type="date"
+                name="fecha_apertura"
+                value="{{ historia.fecha_apertura|date:'Y-m-d' }}"
+                required>
+        </div>
+
+        <br>
+
+        <!-- Paciente -->
+        <div>
+
+            <label>Paciente:</label>
+
+            <select name="paciente">
+
+                {% for paciente in pacientes %}
+
+                    <option
+                        value="{{ paciente.id }}"
+
+                        {% if paciente.id == historia.paciente.id %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ paciente.nombre }}
+                        {{ paciente.apellido }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <br>
+
+        <!-- Motivo consulta -->
+        <div>
+            <label>Motivo Consulta:</label>
+
+            <textarea name="motivo_consulta">{{ historia.motivo_consulta }}</textarea>
+        </div>
+
+        <br>
+
+        <!-- Enfermedad actual -->
+        <div>
+            <label>Enfermedad Actual:</label>
+
+            <textarea name="enfermedad_actual">{{ historia.enfermedad_actual }}</textarea>
+        </div>
+
+        <br>
+
+        <!-- Antecedentes -->
+        <div>
+            <label>Antecedentes:</label>
+
+            <textarea name="antecedentes">{{ historia.antecedentes }}</textarea>
+        </div>
+
+        <br>
+
+        <!-- Diagnóstico inicial -->
+        <div>
+            <label>Diagnóstico Inicial:</label>
+
+            <textarea name="diagnostico_inicial">{{ historia.diagnostico_inicial }}</textarea>
+        </div>
+
+        <br>
+
+        <button type="submit">
+            Actualizar Historia
+        </button>
+
+    </form>
+
+</body>
+</html>

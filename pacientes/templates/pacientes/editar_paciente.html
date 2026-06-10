@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Paciente</title>
+</head>
+<body>
+
+<h1>Editar Paciente</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <select name="tipo_documento"></select>
+
+    <input type="text" name="identificacion" value="{{ paciente.identificacion }}">
+    
+    <div>
+        <label>Nombre:</label>
+        <input
+            type="text"
+            name="nombre"
+            value="{{ paciente.nombre }}"
+            required>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Apellido:</label>
+        <input
+            type="text"
+            name="apellido"
+            value="{{ paciente.apellido }}"
+            required>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Fecha Nacimiento:</label>
+        <input
+            type="date"
+            name="fecha_nacimiento"
+            value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}"
+            required>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Sexo:</label>
+
+        <select name="sexo">
+
+            <option value="Masculino"
+                {% if paciente.sexo == 'Masculino' %}
+                    selected
+                {% endif %}
+            >
+                Masculino
+            </option>
+
+            <option value="Femenino"
+                {% if paciente.sexo == 'Femenino' %}
+                    selected
+                {% endif %}
+            >
+                Femenino
+            </option>
+
+        </select>
+    </div>
+
+    <br>
+
+    <button type="submit">
+        Actualizar
+    </button>
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crear Paciente</title>
+</head>
+<body>
+
+    <h1>Crear Paciente</h1>
+
+    <!-- Formulario que enviará los datos al servidor -->
+    <form method="POST">
+
+        <!-- Token de seguridad obligatorio en Django -->
+        {% csrf_token %}
+        <!-- Tipo de documento -->
+      <div>
+      <label>Tipo de documento:</label>
+      <select name="tipo_documento" required>
+        <option value="">Seleccione</option>
+        <option value="CC">CC</option>
+        <option value="TI">TI</option>
+        <option value="RC">RC</option>
+        <option value="CE">CE</option>
+      </select>
+      </div>
+
+      <br>
+
+      <!-- Número de identificación -->
+      <div>
+      <label>Número de identificación:</label>
+      <input type="text" name="identificacion" required>
+     </div>
+
+      <br>
+
+        <div>
+            <label>Nombre:</label>
+            <input type="text" name="nombre" required>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Apellido:</label>
+            <input type="text" name="apellido" required>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Fecha de Nacimiento:</label>
+            <input type="date" name="fecha_nacimiento" required>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Sexo:</label>
+
+            <select name="sexo">
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+            </select>
+        </div>
+
+        <br>
+
+        <!-- Botón para enviar el formulario -->
+        <button type="submit">
+            Guardar Paciente
+        </button>
+
+    </form>
+
+</body>
+</html>

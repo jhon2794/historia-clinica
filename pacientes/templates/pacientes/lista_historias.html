@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historias Clínicas</title>
+</head>
+<body>
+
+<h1>Historias Clínicas</h1>
+
+<ul>
+    {% if messages %}
+    {% for message in messages %}
+        <p style="color:red;">
+            {{ message }}
+        </p>
+    {% endfor %}
+     {% endif %}
+
+    {% for historia in historias %}
+    <li>
+
+    {{ historia.paciente.nombre }}
+    {{ historia.paciente.apellido }}
+
+    -
+
+    {{ historia.fecha_apertura }}
+
+    <a href="/historias/editar/{{ historia.id }}/">
+        Editar
+    </a>
+
+    <a href="/historias/eliminar/{{ historia.id }}/">
+    Eliminar
+    </a>
+
+    <a href="/evoluciones/{{ historia.id }}/">
+    Ver Evoluciones
+    </a>
+    
+    <a href="/evoluciones/crear/{{ historia.id }}/">
+    Crear Evolución
+    </a>
+
+</li>
+   
+
+    {% endfor %}
+
+</ul>
+
+</body>
+</html>

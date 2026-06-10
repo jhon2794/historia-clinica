@@ -1,0 +1,201 @@
+<h1>
+    Crear Evolución
+</h1>
+
+<p>
+    Historia Clínica #{{ historia.id }}
+</p>
+
+<p>
+    Paciente:
+    {{ historia.paciente.nombre }}
+    {{ historia.paciente.apellido }}
+</p>
+
+<hr>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <!-- Fecha de la evolución -->
+    <div>
+
+        <label>Fecha:</label>
+
+        <input
+            type="date"
+            name="fecha"
+            required>
+
+    </div>
+
+    <br>
+
+    <!-- Motivo de consulta -->
+    <div>
+
+        <label>Motivo Consulta:</label>
+
+        <textarea
+            name="motivo_consulta"
+            required>
+        </textarea>
+
+    </div>
+
+    <br>
+
+    <!-- Observaciones -->
+    <div>
+
+        <label>Observaciones:</label>
+
+        <textarea
+            name="observaciones"
+            required>
+        </textarea>
+
+    </div>
+
+    <br>
+
+    <!-- Diagnóstico -->
+    <div>
+
+        <label>Diagnóstico:</label>
+
+        <textarea
+            name="diagnostico"
+            required>
+        </textarea>
+
+    </div>
+
+    <br>
+
+    <!-- Conducta -->
+    <div>
+
+        <label>Conducta:</label>
+
+        <textarea
+            name="conducta"
+            required>
+        </textarea>
+
+    </div>
+
+    <hr>
+
+    <h3>Signos Vitales</h3>
+
+    <!-- Temperatura -->
+    <div>
+
+        <label>Temperatura:</label>
+
+        <input
+            type="number"
+            step="0.1"
+            name="temperatura"
+            required>
+
+    </div>
+
+    <br>
+
+    <!-- Frecuencia Cardíaca -->
+    <div>
+
+        <label>Frecuencia Cardíaca:</label>
+
+        <input
+            type="number"
+            name="frecuencia_cardiaca"
+            required>
+
+    </div>
+
+    <br>
+
+    <!-- Frecuencia Respiratoria -->
+    <div>
+
+        <label>Frecuencia Respiratoria:</label>
+
+        <input
+            type="number"
+            name="frecuencia_respiratoria"
+            required>
+
+    </div>
+
+    <br>
+
+    <!-- Presión Arterial -->
+    <div>
+
+        <label>Presión Arterial:</label>
+
+        <input
+            type="text"
+            name="presion_arterial"
+            placeholder="120/80"
+            required>
+
+    </div>
+
+    <br>
+
+    <!-- Saturación -->
+    <div>
+
+        <label>Saturación:</label>
+
+        <input
+            type="number"
+            name="saturacion"
+            required>
+
+    </div>
+
+    <br>
+
+    <!-- Peso -->
+    <div>
+
+        <label>Peso:</label>
+
+        <input
+            type="number"
+            step="0.01"
+            name="peso"
+            required>
+
+    </div>
+
+    <br>
+
+    <!-- Talla -->
+    <div>
+
+        <label>Talla:</label>
+
+        <input
+            type="number"
+            step="0.01"
+            name="talla"
+            required>
+
+    </div>
+
+    <br>
+
+    <button type="submit">
+
+        Guardar Evolución
+
+    </button>
+
+</form>

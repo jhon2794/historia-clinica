@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <a href="/pacientes/crear/">
+    Crear Paciente
+</a>
+    <title>Lista de Pacientes</title>
+</head>
+<body>
+
+<h1>Pacientes</h1>
+
+<ul>
+    <!-- 🔹 Recorre todos los pacientes enviados desde views.py -->
+    {% for paciente in pacientes %}
+    
+        <li>
+             {{ paciente.tipo_documento }} - {{ paciente.identificacion }}
+             {{ paciente.nombre }} {{ paciente.apellido }}
+            
+             <!-- Enlace para editar -->
+             <a href="/pacientes/editar/{{ paciente.id }}/"> 
+              Editar
+             </a>
+             <!-- Enlace para eliminar -->
+             <a href="/pacientes/eliminar/{{ paciente.id }}/">
+             Eliminar
+             </a>
+
+        </li>
+
+
+    {% endfor %}
+</ul>
+
+</body>
+</html>

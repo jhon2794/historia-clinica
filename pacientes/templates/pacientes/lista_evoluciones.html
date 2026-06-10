@@ -1,0 +1,35 @@
+<h1>
+    Evoluciones de la Historia {{ historia.id }}
+</h1>
+
+<p>
+    Paciente:
+    {{ historia.paciente.nombre }}
+    {{ historia.paciente.apellido }}
+</p>
+
+<hr>
+
+<ul>
+
+    {% for evolucion in evoluciones %}
+
+        <li>
+
+            {{ evolucion.fecha }}
+
+            -
+
+            {{ evolucion.diagnostico }}
+
+        </li>
+
+    {% empty %}
+
+        <li>
+            No existen evoluciones registradas.
+        </li>
+
+    {% endfor %}
+
+</ul>
