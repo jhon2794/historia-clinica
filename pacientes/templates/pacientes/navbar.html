@@ -1,0 +1,50 @@
+<div style="
+    background:#1e3a8a;
+    color:white;
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:Arial;
+">
+
+    <!-- IZQUIERDA -->
+    <div style="font-size:18px; font-weight:bold;">
+        Sistema Clínico
+    </div>
+
+    <!-- CENTRO -->
+    <div style="opacity:0.9;">
+        Usuario: <strong>{{ request.user.username }}</strong>
+    </div>
+
+    <!-- DERECHA -->
+    <div style="display:flex; gap:15px; align-items:center;">
+
+        <a href="/" style="
+            color:white;
+            text-decoration:none;
+            padding:6px 10px;
+            border-radius:5px;
+            background:rgba(255,255,255,0.15);
+        ">
+            Inicio
+        </a>
+
+        <form action="{% url 'logout' %}" method="post" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" style="
+                background:#dc2626;
+                color:white;
+                border:none;
+                padding:6px 10px;
+                border-radius:5px;
+                cursor:pointer;
+            ">
+                Cerrar sesión
+            </button>
+        </form>
+
+    </div>
+
+</div>

@@ -1,71 +1,171 @@
 <!DOCTYPE html>
+
 <html>
 <head>
+
+    {% include 'pacientes/navbar.html' %}
+
     <title>Lista de Pacientes</title>
+
+```
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .contenedor {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .encabezado {
+        background: #1e3a8a;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .boton {
+        background: #2563eb;
+        color: white;
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .boton:hover {
+        background: #1d4ed8;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+    }
+
+    th {
+        background: #1e3a8a;
+        color: white;
+        padding: 12px;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background: #f9fafb;
+    }
+
+    .acciones a {
+        text-decoration: none;
+        margin-right: 10px;
+    }
+</style>
+```
+
 </head>
 
 <body>
 
-<h1>Pacientes</h1>
+<div class="contenedor">
 
-<!-- 🔹 Información del usuario logueado -->
+```
+<div class="encabezado">
+    <h1>Pacientes</h1>
+</div>
 <p>
-    Usuario: <strong>{{ request.user.username }}</strong>
+    <a href="/pacientes/crear/" class="boton">
+        Crear Paciente
+    </a>
 </p>
 
-<p>
-    Rol: <strong>{{ rol }}</strong>
-</p>
+<form method="GET">
+    <input
+        type="text"
+        name="identificacion"
+        placeholder="Buscar por identificación"
+        value="{{ request.GET.identificacion }}"
+    >
+    <button type="submit">
+        Buscar
+    </button>
+</form>
+<br>
+<table>
+    <thead>
+        <tr>
+            <th>Documento</th>
+            <th>Identificación</th>
+            <th>Nombre</th>
+            <th>Creado Por</th>
+            <th>Actualizado Por</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for paciente in pacientes %}
+        <tr>
 
-<hr>
+            <td>{{ paciente.tipo_documento }}</td>
 
-<!-- Botón crear -->
-<a href="/pacientes/crear/">
-    Crear Paciente
-</a>
+            <td>{{ paciente.identificacion }}</td>
 
-<hr>
+            <td>
+                {{ paciente.nombre }}
+                {{ paciente.apellido }}
+            </td>
 
-<ul>
-    {% for paciente in pacientes %}
-    
-        <li>
-            {{ paciente.tipo_documento }} - {{ paciente.identificacion }}
-            {{ paciente.nombre }} {{ paciente.apellido }}
+            <td>
+                {% if paciente.creado_por %}
+                    {{ paciente.creado_por.username }}
+                {% else %}
+                    Sistema
+                {% endif %}
+            </td>
 
-            <br><br>
+            <td>
+                {% if paciente.actualizado_por %}
+                    {{ paciente.actualizado_por.username }}
+                {% else %}
+                    Nunca editado
+                {% endif %}
+            </td>
 
-            <!-- Auditoría (quién creó) -->
-            Creado por:
-            {% if paciente.creado_por %}
-                {{ paciente.creado_por.username }}
-            {% else %}
-                Sistema
-            {% endif %}
+            <td class="acciones">
 
-            <br>
+                <a href="/pacientes/editar/{{ paciente.id }}/">
+                    Editar
+                </a>
 
-            <!-- Auditoría (quién editó) -->
-            Actualizado por:
-            {% if paciente.actualizado_por %}
-                {{ paciente.actualizado_por.username }}
-            {% else %}
-                Nunca editado
-            {% endif %}
+                <a href="/pacientes/eliminar/{{ paciente.id }}/">
+                    Eliminar
+                </a>
 
-            <br><br>
+            </td>
 
-            <!-- Acciones -->
-            <a href="/pacientes/editar/{{ paciente.id }}/">Editar</a>
-            |
-            <a href="/pacientes/eliminar/{{ paciente.id }}/">Eliminar</a>
+        </tr>
 
-        </li>
+        {% empty %}
+        <tr>
+            <td colspan="6">
+                No hay pacientes registrados.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+```
 
-        <hr>
-
-    {% endfor %}
-</ul>
+</div>
 
 </body>
 </html>

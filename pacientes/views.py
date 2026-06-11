@@ -1,17 +1,24 @@
 from django.shortcuts import render ,redirect 
 from django.contrib import messages
 from .models import Paciente , HistoriaClinica , Evolucion
-
+from django.contrib.auth.decorators import login_required
+@login_required
 def inicio(request):
     return render(request, 'pacientes/inicio.html')
-
+@login_required
 def lista_pacientes(request):
     # 🔹 Trae todos los pacientes de la base de datos
     # SQL equivalente: SELECT * FROM paciente;
     pacientes = Paciente.objects.all()
+    identificacion = request.GET.get('identificacion')
+
+    if identificacion:
+        pacientes = pacientes.filter(
+            identificacion__icontains=identificacion
+        )
     # detectar rol
     rol = None
-
+    
     if request.user.groups.filter(name="medico").exists():
         rol = "medico"
     elif request.user.groups.filter(name="enfermero").exists():
@@ -22,12 +29,10 @@ def lista_pacientes(request):
     # 🔹 Envía los datos al template HTML
     # 'pacientes' será la variable disponible en el HTML
     return render(request, "pacientes/lista_pacientes.html", {
+    "pacientes": pacientes,
     "rol": rol
 })
-
-from django.shortcuts import render, redirect
-from .models import Paciente
-
+@login_required
 def crear_paciente(request):
 
     if request.method == "POST":
@@ -52,7 +57,7 @@ def crear_paciente(request):
         return redirect("lista_pacientes")
 
     return render(request, "pacientes/crear_paciente.html")
-
+@login_required
 def editar_paciente(request, id):
 
     # Busca el paciente por id
@@ -83,7 +88,7 @@ def editar_paciente(request, id):
         'pacientes/editar_paciente.html',
         {'paciente': paciente}
     )
-
+@login_required
 def eliminar_paciente(request, id):
 
     # Busca el paciente por id
@@ -94,6 +99,7 @@ def eliminar_paciente(request, id):
 
     # Regresa al listado
     return redirect('lista_pacientes')
+@login_required
 def lista_historias(request):
 
     # Trae todas las historias clínicas
@@ -105,7 +111,10 @@ def lista_historias(request):
         'pacientes/lista_historias.html',
         {'historias': historias}
     )
-
+def ver_historia(request, id):
+    historia = HistoriaClinica.objects.get(id=id)
+    return render(request, "pacientes/ver_historia.html", {"historia": historia})
+@login_required
 def crear_historia(request):
    
 
@@ -165,7 +174,7 @@ def crear_historia(request):
         {'pacientes': pacientes}
     )
 
-
+@login_required
 # Editar una historia clínica existente
 def editar_historia(request, id):
 
@@ -206,7 +215,7 @@ def editar_historia(request, id):
             'pacientes': pacientes
         }
     )
-
+@login_required
 # Elimina una historia clínica
 def eliminar_historia(request, id):
 
@@ -218,6 +227,7 @@ def eliminar_historia(request, id):
 
     # Regresa al listado
     return redirect('lista_historias')
+@login_required
 def lista_evoluciones(request, historia_id):
 
     # Buscar la historia clínica
@@ -239,6 +249,7 @@ def lista_evoluciones(request, historia_id):
             'evoluciones': evoluciones
         }
     )
+@login_required
 def crear_evolucion(request, historia_id):
 
     # Buscar la historia clínica
@@ -295,6 +306,7 @@ def crear_evolucion(request, historia_id):
             'historia': historia
         }
     )
+@login_required
 def editar_evolucion(request, evolucion_id):
 
     evolucion = Evolucion.objects.get(id=evolucion_id)
@@ -326,7 +338,7 @@ def editar_evolucion(request, evolucion_id):
         'pacientes/editar_evolucion.html',
         {'evolucion': evolucion}
     )
-    
+@login_required
 def eliminar_evolucion(request, evolucion_id):
 
     evolucion = Evolucion.objects.get(id=evolucion_id)

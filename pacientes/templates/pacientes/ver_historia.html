@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ver Historia Clínica</title>
+</head>
+
+<body>
+
+{% include 'pacientes/navbar.html' %}
+
+<h1>Historia Clínica</h1>
+
+<div style="
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    width:80%;
+    margin:auto;
+    font-family:Arial;
+    box-shadow:0px 2px 5px rgba(0,0,0,0.1);
+">
+
+    <h2>Paciente</h2>
+
+    <p>
+        <strong>Nombre:</strong>
+        {{ historia.paciente.nombre }} {{ historia.paciente.apellido }}
+    </p>
+
+    <p>
+        <strong>Documento:</strong>
+        {{ historia.paciente.tipo_documento }} - {{ historia.paciente.identificacion }}
+    </p>
+
+    <hr>
+
+    <h2>Información de la Historia</h2>
+
+    <p>
+        <strong>Fecha de apertura:</strong>
+        {{ historia.fecha_apertura }}
+    </p>
+
+    <p>
+        <strong>ID Historia:</strong>
+        {{ historia.id }}
+    </p>
+
+    <p>
+        <strong>Motivo de Consulta:</strong>
+        {{ historia.motivo_consulta }}
+     </p>
+
+     <p>
+        <strong>Enfermedad Actual:</strong>
+        {{ historia.enfermedad_actual }}
+     </p>
+
+     <p>
+        <strong>Antecedentes:</strong>
+        {{ historia.antecedentes }}
+     </p>
+
+     <p>
+        <strong>Diagnostico Inicial:</strong>
+        {{ historia.diagnostico_inicial }}
+     </p>
+
+    <hr>
+
+    <h2>Acciones</h2>
+
+    <a href="/historias/editar/{{ historia.id }}/"
+       style="background:#2563eb;color:white;padding:8px 12px;border-radius:5px;text-decoration:none;">
+        Editar Historia
+    </a>
+
+    <a href="/evoluciones/{{ historia.id }}/"
+       style="background:#1e3a8a;color:white;padding:8px 12px;border-radius:5px;text-decoration:none;">
+        Ver Evoluciones
+    </a>
+
+    <a href="/evoluciones/crear/{{ historia.id }}/"
+       style="background:#16a34a;color:white;padding:8px 12px;border-radius:5px;text-decoration:none;">
+        + Nueva Evolución
+    </a>
+
+</div>
+
+</body>
+</html>

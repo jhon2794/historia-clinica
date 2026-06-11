@@ -1,23 +1,93 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="es">
 <head>
-    <title>Historias Clínicas</title>
+   {% include 'pacientes/navbar.html' %}
+    <meta charset="UTF-8">
+    <title>Sistema de Historias Clínicas</title>
+
+```
+<style>
+    body{
+        margin:0;
+        font-family: Arial, sans-serif;
+        background:#f4f6f9;
+    }
+
+    header{
+        background:#1e3a8a;
+        color:white;
+        padding:20px;
+        text-align:center;
+    }
+
+    .contenedor{
+        width:80%;
+        margin:40px auto;
+    }
+    .menu{
+        display:flex;
+        gap:20px;
+        flex-wrap:wrap;
+    }
+
+    .card{
+        background:white;
+        width:250px;
+        padding:20px;
+        border-radius:10px;
+        text-align:center;
+        box-shadow:0px 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .card h3{
+        color:#1e3a8a;
+    }
+
+    .card a{
+        display:inline-block;
+        margin-top:10px;
+        padding:10px 15px;
+        background:#2563eb;
+        color:white;
+        text-decoration:none;
+        border-radius:5px;
+    }
+
+    .card a:hover{
+        background:#1d4ed8;
+    }
+</style>
+```
+
 </head>
 <body>
 
+<header>
     <h1>Sistema de Historias Clínicas</h1>
+</header>
 
-    <p>Bienvenido al sistema.</p>
+<div class="contenedor">
 
-    <a href="/pacientes/">
-    Ver Pacientes
-    </a>
+```
+<div class="menu">
 
-  <br><br>
+    <div class="card">
+        <h3>Pacientes</h3>
+        <p>Administrar pacientes registrados.</p>
+        <a href="/pacientes/">Ingresar</a>
+    </div>
 
-  <a href="/pacientes/crear/">
-    Crear Paciente
-  </a>
+    <div class="card">
+        <h3>Historias Clínicas</h3>
+        <p>Consultar y administrar historias clínicas.</p>
+        <a href="/historias/">Ingresar</a>
+    </div>
+
+</div>
+```
+
+</div>
 
 </body>
 </html>

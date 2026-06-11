@@ -3,51 +3,132 @@
 <head>
     <title>Historias Clínicas</title>
 </head>
+
 <body>
+
+{% include 'pacientes/navbar.html' %}
 
 <h1>Historias Clínicas</h1>
 
-<ul>
-    {% if messages %}
-    {% for message in messages %}
-        <p style="color:red;">
-            {{ message }}
-        </p>
-    {% endfor %}
-     {% endif %}
+<!-- 🔥 BOTÓN PRINCIPAL -->
+<a href="/historias/crear/" style="
+    display:inline-block;
+    background:#16a34a;
+    color:white;
+    padding:10px 15px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:bold;
+    margin-bottom:15px;
+">
+    + Crear Historia Clínica
+</a>
 
-    {% for historia in historias %}
-    <li>
+<hr>
 
-    {{ historia.paciente.nombre }}
-    {{ historia.paciente.apellido }}
+<table border="1" cellpadding="10" width="100%" style="
+    border-collapse: collapse;
+    font-family: Arial;
+">
 
-    -
+    <thead style="background:#1e3a8a; color:white;">
+        <tr>
+            <th>Paciente</th>
+            <th>Fecha Apertura</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
 
-    {{ historia.fecha_apertura }}
+    <tbody>
 
-    <a href="/historias/editar/{{ historia.id }}/">
-        Editar
-    </a>
+        {% for historia in historias %}
 
-    <a href="/historias/eliminar/{{ historia.id }}/">
-    Eliminar
-    </a>
+        <tr style="background:white;">
 
-    <a href="/evoluciones/{{ historia.id }}/">
-    Ver Evoluciones
-    </a>
-    
-    <a href="/evoluciones/crear/{{ historia.id }}/">
-    Crear Evolución
-    </a>
+            <td>
+                <strong>{{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</strong>
+            </td>
 
-</li>
-   
+            <td>
+                {{ historia.fecha_apertura }}
+            </td>
 
-    {% endfor %}
+            <td>
 
-</ul>
+                <div style="display:flex; flex-direction:column; gap:6px; min-width:160px;">
+
+                    <!-- 👁 VER HISTORIA (NUEVO Y CORRECTO) -->
+                    <a href="/historias/ver/{{ historia.id }}/"
+                       style="
+                        background:#0ea5e9;
+                        color:white;
+                        padding:6px 10px;
+                        border-radius:5px;
+                        text-align:center;
+                        text-decoration:none;
+                       ">
+                        Ver Historia
+                    </a>
+
+                    <!-- ✏ EDITAR (como lo tenías antes) -->
+                    <a href="/historias/editar/{{ historia.id }}/"
+                       style="
+                        background:#2563eb;
+                        color:white;
+                        padding:6px 10px;
+                        border-radius:5px;
+                        text-align:center;
+                        text-decoration:none;
+                       ">
+                        Editar Historia
+                    </a>
+
+                    <!-- 📄 EVOLUCIONES -->
+                    <a href="/evoluciones/{{ historia.id }}/"
+                       style="
+                        background:#1e3a8a;
+                        color:white;
+                        padding:6px 10px;
+                        border-radius:5px;
+                        text-align:center;
+                        text-decoration:none;
+                       ">
+                        Ver Evoluciones
+                    </a>
+
+                    <!-- ➕ NUEVA EVOLUCIÓN -->
+                    <a href="/evoluciones/crear/{{ historia.id }}/"
+                       style="
+                        background:#16a34a;
+                        color:white;
+                        padding:6px 10px;
+                        border-radius:5px;
+                        text-align:center;
+                        text-decoration:none;
+                        font-weight:bold;
+                       ">
+                        + Nueva Evolución
+                    </a>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+            <td colspan="3">
+                No hay historias clínicas registradas.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
 
 </body>
 </html>
