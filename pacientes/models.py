@@ -30,8 +30,7 @@ class Paciente(models.Model):
     sexo = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido}"
-    
+        return f"{self.nombre} {self.apellido}"    
 class HistoriaClinica(models.Model):
     
     paciente = models.OneToOneField(Paciente,on_delete=models.CASCADE)
@@ -46,23 +45,37 @@ class HistoriaClinica(models.Model):
 
     diagnostico_inicial = models.TextField()
 
+      # 🔥 AUDITORÍA
+    creado_por = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="historias_creadas"
+    )
+
+    actualizado_por = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="historias_actualizadas"
+    )
+
     def __str__(self):
-        return f"Historia #{self.id} - {self.paciente}"  
-      
+        return f"Historia #{self.id} - {self.paciente}"
+
 class Evolucion(models.Model):
+
     historia = models.ForeignKey(
         HistoriaClinica,
         on_delete=models.CASCADE
     )
 
     fecha = models.DateField()
-
     motivo_consulta = models.TextField()
-
     observaciones = models.TextField()
-
     diagnostico = models.TextField()
-
     conducta = models.TextField()
 
     temperatura = models.DecimalField(
@@ -71,7 +84,6 @@ class Evolucion(models.Model):
     )
 
     frecuencia_cardiaca = models.IntegerField()
-
     frecuencia_respiratoria = models.IntegerField()
 
     presion_arterial = models.CharField(
@@ -89,6 +101,25 @@ class Evolucion(models.Model):
         max_digits=5,
         decimal_places=2
     )
-    def __str__(self):
 
-     return (f"Evolución {self.id} "f"- Historia {self.historia.id}")
+    # 🔥 AUDITORÍA
+    profesional = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="evoluciones_creadas"
+    )
+
+    actualizado_por = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="evoluciones_actualizadas"
+    )
+
+    def __str__(self):
+        return f"Evolución {self.id} - Historia {self.historia.id}"          
+      
+

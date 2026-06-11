@@ -2,83 +2,138 @@
 <html>
 <head>
     <title>Editar Paciente</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        .container {
+            width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #2c7be5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1a68d1;
+        }
+    </style>
 </head>
+
 <body>
- {% include 'pacientes/navbar.html' %}
-<h1>Editar Paciente</h1>
 
-<form method="POST">
+<!-- 🔹 Navbar -->
+{% include 'pacientes/navbar.html' %}
 
-    {% csrf_token %}
+<div class="container">
 
-    <select name="tipo_documento"></select>
+    <h1>Editar Paciente</h1>
 
-    <input type="text" name="identificacion" value="{{ paciente.identificacion }}">
-    
-    <div>
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Tipo Documento -->
+        <label>Tipo de Documento:</label>
+        <select name="tipo_documento" required>
+
+            <option value="CC"
+                {% if paciente.tipo_documento == 'CC' %}selected{% endif %}>
+                Cédula de Ciudadanía
+            </option>
+
+            <option value="TI"
+                {% if paciente.tipo_documento == 'TI' %}selected{% endif %}>
+                Tarjeta de Identidad
+            </option>
+
+            <option value="CE"
+                {% if paciente.tipo_documento == 'CE' %}selected{% endif %}>
+                Cédula de Extranjería
+            </option>
+
+        </select>
+
+        <!-- Identificación -->
+        <label>Identificación:</label>
+        <input type="text"
+               name="identificacion"
+               value="{{ paciente.identificacion }}"
+               required>
+
+        <!-- Nombre -->
         <label>Nombre:</label>
-        <input
-            type="text"
-            name="nombre"
-            value="{{ paciente.nombre }}"
-            required>
-    </div>
+        <input type="text"
+               name="nombre"
+               value="{{ paciente.nombre }}"
+               required>
 
-    <br>
-
-    <div>
+        <!-- Apellido -->
         <label>Apellido:</label>
-        <input
-            type="text"
-            name="apellido"
-            value="{{ paciente.apellido }}"
-            required>
-    </div>
+        <input type="text"
+               name="apellido"
+               value="{{ paciente.apellido }}"
+               required>
 
-    <br>
+        <!-- Fecha -->
+        <label>Fecha de Nacimiento:</label>
+        <input type="date"
+               name="fecha_nacimiento"
+               value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}"
+               required>
 
-    <div>
-        <label>Fecha Nacimiento:</label>
-        <input
-            type="date"
-            name="fecha_nacimiento"
-            value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}"
-            required>
-    </div>
-
-    <br>
-
-    <div>
+        <!-- Sexo -->
         <label>Sexo:</label>
-
         <select name="sexo">
 
             <option value="Masculino"
-                {% if paciente.sexo == 'Masculino' %}
-                    selected
-                {% endif %}
-            >
+                {% if paciente.sexo == 'Masculino' %}selected{% endif %}>
                 Masculino
             </option>
 
             <option value="Femenino"
-                {% if paciente.sexo == 'Femenino' %}
-                    selected
-                {% endif %}
-            >
+                {% if paciente.sexo == 'Femenino' %}selected{% endif %}>
                 Femenino
             </option>
 
         </select>
-    </div>
 
-    <br>
+        <button type="submit">
+            Actualizar Paciente
+        </button>
 
-    <button type="submit">
-        Actualizar
-    </button>
+    </form>
 
-</form>
+</div>
 
 </body>
 </html>

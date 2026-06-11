@@ -2,76 +2,121 @@
 <html>
 <head>
     <title>Crear Paciente</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        .container {
+            width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #2c7be5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1a68d1;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
 </head>
+
 <body>
+
+<!-- 🔹 Navbar -->
+{% include 'pacientes/navbar.html' %}
+
+<div class="container">
 
     <h1>Crear Paciente</h1>
 
-    <!-- Formulario que enviará los datos al servidor -->
     <form method="POST">
-
-        <!-- Token de seguridad obligatorio en Django -->
         {% csrf_token %}
-        <!-- Tipo de documento -->
-      <div>
-      <label>Tipo de documento:</label>
-      <select name="tipo_documento" required>
-        <option value="">Seleccione</option>
-        <option value="CC">CC</option>
-        <option value="TI">TI</option>
-        <option value="RC">RC</option>
-        <option value="CE">CE</option>
-      </select>
-      </div>
 
-      <br>
+        <!-- Tipo Documento -->
+        <label>Tipo de Documento:</label>
+        <select name="tipo_documento" required>
 
-      <!-- Número de identificación -->
-      <div>
-      <label>Número de identificación:</label>
-      <input type="text" name="identificacion" required>
-     </div>
+            <option value="">Seleccione...</option>
 
-      <br>
+            <option value="CC">Cédula de Ciudadanía</option>
+            <option value="TI">Tarjeta de Identidad</option>
+            <option value="CE">Cédula de Extranjería</option>
 
-        <div>
-            <label>Nombre:</label>
-            <input type="text" name="nombre" required>
-        </div>
+        </select>
 
-        <br>
+        <!-- Identificación -->
+        <label>Identificación:</label>
+        <input type="text" name="identificacion" required>
 
-        <div>
-            <label>Apellido:</label>
-            <input type="text" name="apellido" required>
-        </div>
+        <!-- Nombre -->
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
 
-        <br>
+        <!-- Apellido -->
+        <label>Apellido:</label>
+        <input type="text" name="apellido" required>
 
-        <div>
-            <label>Fecha de Nacimiento:</label>
-            <input type="date" name="fecha_nacimiento" required>
-        </div>
+        <!-- Fecha -->
+        <label>Fecha de Nacimiento:</label>
+        <input type="date" name="fecha_nacimiento" required>
 
-        <br>
+        <!-- Sexo -->
+        <label>Sexo:</label>
+        <select name="sexo">
 
-        <div>
-            <label>Sexo:</label>
+            <option value="">Seleccione...</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
 
-            <select name="sexo">
-                <option value="Masculino">Masculino</option>
-                <option value="Femenino">Femenino</option>
-            </select>
-        </div>
+        </select>
 
-        <br>
-
-        <!-- Botón para enviar el formulario -->
         <button type="submit">
             Guardar Paciente
         </button>
 
     </form>
+
+    <a class="back" href="/pacientes/">
+        ← Volver a la lista
+    </a>
+
+</div>
 
 </body>
 </html>

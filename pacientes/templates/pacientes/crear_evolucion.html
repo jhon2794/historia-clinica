@@ -1,201 +1,145 @@
-<h1>
-    Crear Evolución
-</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crear Evolución</title>
 
-<p>
-    Historia Clínica #{{ historia.id }}
-</p>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            margin: 0;
+        }
 
-<p>
-    Paciente:
-    {{ historia.paciente.nombre }}
-    {{ historia.paciente.apellido }}
-</p>
+        .container {
+            width: 650px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-<hr>
+        h1 {
+            text-align: center;
+        }
 
-<form method="POST">
+        label {
+            font-weight: bold;
+        }
 
-    {% csrf_token %}
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
 
-    <!-- Fecha de la evolución -->
-    <div>
+        textarea {
+            height: 80px;
+            resize: none;
+        }
 
+        .info-box {
+            background: #f1f3f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #2c7be5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1a68d1;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+{% include 'pacientes/navbar.html' %}
+
+<div class="container">
+
+    <h1>Crear Evolución</h1>
+
+    <!-- 🔹 Contexto -->
+    <div class="info-box">
+        <strong>Historia Clínica</strong><br>
+        Paciente: {{ historia.paciente.nombre }} {{ historia.paciente.identificacion}}<br>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Fecha -->
         <label>Fecha:</label>
+        <input type="date" name="fecha" required>
 
-        <input
-            type="date"
-            name="fecha"
-            required>
+        <!-- Motivo -->
+        <label>Motivo de Consulta:</label>
+        <textarea name="motivo_consulta" required></textarea>
 
-    </div>
-
-    <br>
-
-    <!-- Motivo de consulta -->
-    <div>
-
-        <label>Motivo Consulta:</label>
-
-        <textarea
-            name="motivo_consulta"
-            required>
-        </textarea>
-
-    </div>
-
-    <br>
-
-    <!-- Observaciones -->
-    <div>
-
-        <label>Observaciones:</label>
-
-        <textarea
-            name="observaciones"
-            required>
-        </textarea>
-
-    </div>
-
-    <br>
-
-    <!-- Diagnóstico -->
-    <div>
-
+        <!-- Diagnóstico -->
         <label>Diagnóstico:</label>
+        <textarea name="diagnostico"></textarea>
 
-        <textarea
-            name="diagnostico"
-            required>
-        </textarea>
+        <!-- Observaciones -->
+        <label>Observaciones:</label>
+        <textarea name="observaciones"></textarea>
 
-    </div>
-
-    <br>
-
-    <!-- Conducta -->
-    <div>
-
+        <!-- Conducta -->
         <label>Conducta:</label>
+        <textarea name="conducta"></textarea>
 
-        <textarea
-            name="conducta"
-            required>
-        </textarea>
-
-    </div>
-
-    <hr>
-
-    <h3>Signos Vitales</h3>
-
-    <!-- Temperatura -->
-    <div>
-
+        <!-- Signos vitales -->
         <label>Temperatura:</label>
+        <input type="number" step="0.1" name="temperatura">
 
-        <input
-            type="number"
-            step="0.1"
-            name="temperatura"
-            required>
-
-    </div>
-
-    <br>
-
-    <!-- Frecuencia Cardíaca -->
-    <div>
-
-        <label>Frecuencia Cardíaca:</label>
-
-        <input
-            type="number"
-            name="frecuencia_cardiaca"
-            required>
-
-    </div>
-
-    <br>
-
-    <!-- Frecuencia Respiratoria -->
-    <div>
+        <label>Frecuencia Cardiaca:</label>
+        <input type="number" name="frecuencia_cardiaca">
 
         <label>Frecuencia Respiratoria:</label>
-
-        <input
-            type="number"
-            name="frecuencia_respiratoria"
-            required>
-
-    </div>
-
-    <br>
-
-    <!-- Presión Arterial -->
-    <div>
+        <input type="number" name="frecuencia_respiratoria">
 
         <label>Presión Arterial:</label>
-
-        <input
-            type="text"
-            name="presion_arterial"
-            placeholder="120/80"
-            required>
-
-    </div>
-
-    <br>
-
-    <!-- Saturación -->
-    <div>
+        <input type="text" name="presion_arterial">
 
         <label>Saturación:</label>
+        <input type="number" name="saturacion">
 
-        <input
-            type="number"
-            name="saturacion"
-            required>
+        <label>Peso (kg):</label>
+        <input type="number" step="0.01" name="peso">
 
-    </div>
+        <label>Talla (cm):</label>
+        <input type="number" step="0.01" name="talla">
 
-    <br>
+        <button type="submit">
+            Guardar Evolución
+        </button>
 
-    <!-- Peso -->
-    <div>
+    </form>
 
-        <label>Peso:</label>
+    <!-- 🔹 Botón corregido -->
+    <a class="back" href="/evoluciones/{{historia.id }}/">
+        ← Volver a lista de evoluciones
+    </a>
 
-        <input
-            type="number"
-            step="0.01"
-            name="peso"
-            required>
+</div>
 
-    </div>
-
-    <br>
-
-    <!-- Talla -->
-    <div>
-
-        <label>Talla:</label>
-
-        <input
-            type="number"
-            step="0.01"
-            name="talla"
-            required>
-
-    </div>
-
-    <br>
-
-    <button type="submit">
-
-        Guardar Evolución
-
-    </button>
-
-</form>
+</body>
+</html>

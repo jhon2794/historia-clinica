@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 
@@ -7,70 +6,78 @@
 
     <title>Lista de Pacientes</title>
 
-```
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f6f9;
-        margin: 0;
-        padding: 20px;
-    }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
 
-    .contenedor {
-        max-width: 1200px;
-        margin: auto;
-    }
+        .contenedor {
+            max-width: 1200px;
+            margin: auto;
+        }
 
-    .encabezado {
-        background: #1e3a8a;
-        color: white;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
+        .encabezado {
+            background: #1e3a8a;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
 
-    .boton {
-        background: #2563eb;
-        color: white;
-        padding: 10px 15px;
-        text-decoration: none;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-    }
+        .boton {
+            background: #2563eb;
+            color: white;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 14px;
+        }
 
-    .boton:hover {
-        background: #1d4ed8;
-    }
+        .boton:hover {
+            background: #1d4ed8;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-        box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-    }
+        .boton-rojo {
+            background: #dc2626;
+        }
 
-    th {
-        background: #1e3a8a;
-        color: white;
-        padding: 12px;
-    }
+        .boton-rojo:hover {
+            background: #b91c1c;
+        }
 
-    td {
-        padding: 12px;
-        border-bottom: 1px solid #ddd;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+        }
 
-    tr:hover {
-        background: #f9fafb;
-    }
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+        }
 
-    .acciones a {
-        text-decoration: none;
-        margin-right: 10px;
-    }
-</style>
-```
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+    </style>
 
 </head>
 
@@ -78,92 +85,111 @@
 
 <div class="contenedor">
 
-```
-<div class="encabezado">
-    <h1>Pacientes</h1>
-</div>
-<p>
+    <!-- Encabezado -->
+    <div class="encabezado">
+        <h1>Pacientes</h1>
+    </div>
+
+    <!-- Botón crear paciente -->
     <a href="/pacientes/crear/" class="boton">
-        Crear Paciente
+        + Crear Paciente
     </a>
-</p>
 
-<form method="GET">
-    <input
-        type="text"
-        name="identificacion"
-        placeholder="Buscar por identificación"
-        value="{{ request.GET.identificacion }}"
-    >
-    <button type="submit">
-        Buscar
-    </button>
-</form>
-<br>
-<table>
-    <thead>
-        <tr>
-            <th>Documento</th>
-            <th>Identificación</th>
-            <th>Nombre</th>
-            <th>Creado Por</th>
-            <th>Actualizado Por</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for paciente in pacientes %}
-        <tr>
+    <br><br>
 
-            <td>{{ paciente.tipo_documento }}</td>
+    <!-- Buscador -->
+    <form method="GET">
+        <input
+            type="text"
+            name="identificacion"
+            placeholder="Buscar por identificación"
+            value="{{ request.GET.identificacion }}"
+        >
+        <button type="submit" class="boton">
+            Buscar
+        </button>
+    </form>
 
-            <td>{{ paciente.identificacion }}</td>
+    <br>
 
-            <td>
-                {{ paciente.nombre }}
-                {{ paciente.apellido }}
-            </td>
+    <!-- Tabla -->
+    <table>
+        <thead>
+            <tr>
+                <th>Documento</th>
+                <th>Identificación</th>
+                <th>Nombre</th>
+                <th>Creado Por</th>
+                <th>Actualizado Por</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
 
-            <td>
-                {% if paciente.creado_por %}
-                    {{ paciente.creado_por.username }}
-                {% else %}
-                    Sistema
-                {% endif %}
-            </td>
+        <tbody>
+            {% for paciente in pacientes %}
+            <tr>
 
-            <td>
-                {% if paciente.actualizado_por %}
-                    {{ paciente.actualizado_por.username }}
-                {% else %}
-                    Nunca editado
-                {% endif %}
-            </td>
+                <td>{{ paciente.tipo_documento }}</td>
 
-            <td class="acciones">
+                <td>{{ paciente.identificacion }}</td>
 
-                <a href="/pacientes/editar/{{ paciente.id }}/">
-                    Editar
-                </a>
+                <td>
+                    {{ paciente.nombre }} {{ paciente.apellido }}
+                </td>
 
-                <a href="/pacientes/eliminar/{{ paciente.id }}/">
-                    Eliminar
-                </a>
+                <td>
+                    {% if paciente.creado_por %}
+                        {{ paciente.creado_por.username }}
+                    {% else %}
+                        Sistema
+                    {% endif %}
+                </td>
 
-            </td>
+                <td>
+                    {% if paciente.actualizado_por %}
+                        {{ paciente.actualizado_por.username }}
+                    {% else %}
+                        Nunca editado
+                    {% endif %}
+                </td>
 
-        </tr>
+                <td>
 
-        {% empty %}
-        <tr>
-            <td colspan="6">
-                No hay pacientes registrados.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-```
+                    <div class="acciones">
+
+                        <!-- EDITAR -->
+                        <a href="/pacientes/editar/{{ paciente.id }}/" class="boton">
+                            Editar
+                        </a>
+
+                        <!-- CREAR HISTORIA -->
+                        <a href="/historias/crear/" class="boton">
+                            Crear Historia
+                        </a>
+
+                        <!-- ELIMINAR -->
+                        <a href="/pacientes/eliminar/{{ paciente.id }}/"
+                           class="boton boton-rojo"
+                           onclick="return confirm('⚠️ ¿Seguro que deseas eliminar este paciente?')">
+                            Eliminar
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="6">
+                    No hay pacientes registrados.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
 
 </div>
 

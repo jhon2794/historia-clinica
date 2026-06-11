@@ -1,43 +1,151 @@
-<h1>
-    Evoluciones de la Historia {{ historia.id }}
-</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Evoluciones</title>
 
-<p>
-    Paciente:
-    {{ historia.paciente.nombre }}
-    {{ historia.paciente.apellido }}
-</p>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            margin: 0;
+        }
 
-<hr>
+        .container {
+            width: 850px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-<ul>
+        h1 {
+            text-align: center;
+        }
 
-    {% for evolucion in evoluciones %}
+        .card {
+            border-left: 5px solid #2c7be5;
+            background: #fafafa;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
 
-        <li>
+        .info {
+            font-size: 14px;
+            color: #555;
+        }
 
-            {{ evolucion.fecha }}
+        .nota {
+            margin-top: 10px;
+            font-size: 15px;
+        }
 
-            -
+        .actions a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
 
-            {{ evolucion.diagnostico }}
+        .ver {
+            background: #17a2b8;
+            color: white;
+        }
 
-            <a href="/evoluciones/editar/{{ evolucion.id }}/">
-             Editar
-            </a>
+        .eliminar {
+            background: #dc3545;
+            color: white;
+        }
 
-            <a href="/evoluciones/eliminar/{{ evolucion.id }}/">
-             Eliminar
-            </a>
+        .ver:hover { background: #138496; }
+        .eliminar:hover { background: #c82333; }
 
-        </li>
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #2c7be5;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #1a68d1;
+        }
+    </style>
+</head>
+
+<body>
+
+{% include 'pacientes/navbar.html' %}
+
+<div class="container">
+
+    <div class="top-bar">
+        <h1>Lista de Evoluciones</h1>
+
+         <a class="btn" href="/evoluciones/crear/{{ historia.id }}/">
+         + Nueva Evolución
+        </a>
+
+       
+    </div>
+
+    {% for e in evoluciones %}
+
+        <div class="card">
+
+            <div class="info">
+                <strong>Paciente:</strong>
+                {{ e.historia.paciente.nombre }} {{ e.historia.paciente.apellido }}
+            </div>
+
+            <div class="info">
+                <strong>Fecha:</strong>
+                {{ e.fecha }}
+            </div>
+
+            <div class="info">
+                <strong>Profesional:</strong>
+                {{ e.profesional.username }}
+            </div>
+
+            <div class="nota">
+                {{ e.nota_evolucion }}
+            </div>
+
+            <br>
+
+            <div class="actions">
+
+                <a class="ver"
+                   href="/evoluciones/ver/{{ e.id }}/">
+                   Ver
+                </a>
+
+                <a class="eliminar"
+                   href="/evoluciones/eliminar/{{ e.id }}/"
+                   onclick="return confirm('¿Eliminar esta evolución?');">
+                   Eliminar
+                </a>
+
+            </div>
+
+        </div>
 
     {% empty %}
 
-        <li>
-            No existen evoluciones registradas.
-        </li>
+        <p>No hay evoluciones registradas.</p>
 
     {% endfor %}
 
-</ul>
+</div>
+
+</body>
+</html>

@@ -1,118 +1,249 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-    <title>Crear Historia Clínica</title>
+
+```
+<title>Crear Historia Clínica</title>
+
+<style>
+
+    body{
+        font-family: Arial, sans-serif;
+        background:#f4f6f9;
+        margin:0;
+        padding:20px;
+    }
+
+    .contenedor{
+        max-width:900px;
+        margin:auto;
+    }
+
+    .encabezado{
+        background:#1e3a8a;
+        color:white;
+        padding:20px;
+        border-radius:10px;
+        margin-bottom:20px;
+    }
+
+    .card{
+        background:white;
+        padding:25px;
+        border-radius:10px;
+        box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .campo{
+        margin-bottom:15px;
+    }
+
+    label{
+        display:block;
+        font-weight:bold;
+        margin-bottom:5px;
+    }
+
+    input,
+    select,
+    textarea{
+        width:100%;
+        padding:10px;
+        box-sizing:border-box;
+    }
+
+    textarea{
+        min-height:100px;
+        resize:vertical;
+    }
+
+    .paciente-info{
+        background:#e0f2fe;
+        border-left:5px solid #0284c7;
+        padding:15px;
+        border-radius:5px;
+        margin-bottom:20px;
+    }
+
+    .mensaje{
+        background:#fee2e2;
+        color:#991b1b;
+        padding:10px;
+        border-radius:5px;
+        margin-bottom:15px;
+    }
+
+    .boton{
+        background:#2563eb;
+        color:white;
+        padding:10px 15px;
+        border:none;
+        border-radius:5px;
+        text-decoration:none;
+        cursor:pointer;
+    }
+
+    .boton:hover{
+        background:#1d4ed8;
+    }
+
+    .acciones{
+        margin-top:20px;
+    }
+
+</style>
+```
+
 </head>
+
 <body>
 
-    <h1>Crear Historia Clínica</h1>
+{% include 'pacientes/navbar.html' %}
 
-    <!-- Formulario que enviará los datos al backend -->
+<div class="contenedor">
+
+```
+<div class="encabezado">
+    <h1>Crear Historia Clínica</h1>
+</div>
+
+<div class="card">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mensaje">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <form method="POST">
 
-        <!-- Seguridad obligatoria de Django -->
         {% csrf_token %}
 
-        <br>
-        <!-- Fecha de apertura -->
-        <div>
-            <label>Fecha Apertura:</label>
+        <div class="campo">
+            <label>Fecha de Apertura</label>
+
             <input
                 type="date"
                 name="fecha_apertura"
-                required>
+                required
+            >
         </div>
-        <br>
 
-        <!-- Paciente asociado a la historia -->
-        <div>
+        {% if paciente %}
 
-            <label>Paciente:</label>
+            <div class="paciente-info">
 
-            <select name="paciente">
+                <strong>Paciente Seleccionado</strong>
 
-                <!-- Recorre todos los pacientes enviados desde views.py -->
-                {% for paciente in pacientes %}
+                <br><br>
 
-                    <!-- El value es el id que llegará al backend -->
-                    <option value="{{ paciente.id }}">
+                {{ paciente.tipo_documento }}
+                {{ paciente.identificacion }}
 
-                        <!-- Texto visible para el usuario -->
-                        {{ paciente.nombre }}
-                        {{ paciente.apellido }}
+                <br>
 
+                {{ paciente.nombre }}
+                {{ paciente.apellido }}
+
+            </div>
+
+        {% else %}
+
+            <div class="campo">
+
+                <label>Paciente</label>
+
+                <select
+                    name="paciente"
+                    required
+                >
+
+                    <option value="">
+                        Seleccione un paciente
                     </option>
 
-                {% endfor %}
+                    {% for paciente in pacientes %}
 
-            </select>
+                        <option value="{{ paciente.id }}">
+                            {{ paciente.tipo_documento }}
+                            -
+                            {{ paciente.identificacion }}
+                            -
+                            {{ paciente.nombre }}
+                            {{ paciente.apellido }}
+                        </option>
 
-        </div>
+                    {% endfor %}
 
-        <br>
+                </select>
 
-        <!-- Motivo principal de consulta -->
-        <div>
+            </div>
 
-            <label>Motivo Consulta:</label>
+        {% endif %}
+
+        <div class="campo">
+            <label>Motivo de Consulta</label>
 
             <textarea
                 name="motivo_consulta"
-                rows="4"
-                cols="50"></textarea>
-
+                required
+            ></textarea>
         </div>
 
-        <br>
-
-        <!-- Descripción de la enfermedad actual -->
-        <div>
-
-            <label>Enfermedad Actual:</label>
+        <div class="campo">
+            <label>Enfermedad Actual</label>
 
             <textarea
                 name="enfermedad_actual"
-                rows="4"
-                cols="50"></textarea>
-
+                required
+            ></textarea>
         </div>
 
-        <br>
-
-        <!-- Antecedentes del paciente -->
-        <div>
-
-            <label>Antecedentes:</label>
+        <div class="campo">
+            <label>Antecedentes</label>
 
             <textarea
                 name="antecedentes"
-                rows="4"
-                cols="50"></textarea>
-
+                required
+            ></textarea>
         </div>
 
-        <br>
-
-        <!-- Diagnóstico inicial -->
-        <div>
-
-            <label>Diagnóstico Inicial:</label>
+        <div class="campo">
+            <label>Diagnóstico Inicial</label>
 
             <textarea
                 name="diagnostico_inicial"
-                rows="4"
-                cols="50"></textarea>
+                required
+            ></textarea>
+        </div>
+
+        <div class="acciones">
+
+            <button
+                type="submit"
+                class="boton"
+            >
+                Guardar Historia
+            </button>
+
+            <a
+                href="{% url 'lista_historias' %}"
+                class="boton"
+            >
+                Volver
+            </a>
 
         </div>
 
-        <br>
-
-        <!-- Botón para guardar -->
-        <button type="submit">
-            Guardar Historia
-        </button>
-
     </form>
+
+</div>
+```
+
+</div>
 
 </body>
 </html>

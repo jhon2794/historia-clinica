@@ -1,4 +1,4 @@
-from django.shortcuts import render ,redirect 
+from django.shortcuts import render ,redirect ,  get_object_or_404
 from django.contrib import messages
 from .models import Paciente , HistoriaClinica , Evolucion
 from django.contrib.auth.decorators import login_required
@@ -28,10 +28,7 @@ def lista_pacientes(request):
 
     # 🔹 Envía los datos al template HTML
     # 'pacientes' será la variable disponible en el HTML
-    return render(request, "pacientes/lista_pacientes.html", {
-    "pacientes": pacientes,
-    "rol": rol
-})
+    return render(request, "pacientes/lista_pacientes.html", {"pacientes": pacientes,"rol": rol})
 @login_required
 def crear_paciente(request):
 
@@ -56,7 +53,8 @@ def crear_paciente(request):
 
         return redirect("lista_pacientes")
 
-    return render(request, "pacientes/crear_paciente.html")
+    return render(request, "pacientes/crear_paciente.html" )
+
 @login_required
 def editar_paciente(request, id):
 
@@ -65,7 +63,7 @@ def editar_paciente(request, id):
 
     # Si enviaron el formulario
     if request.method == 'POST':
-
+         
         # Actualiza los datos
         paciente.tipo_documento = request.POST['tipo_documento']
         paciente.identificacion = request.POST['identificacion']
@@ -73,21 +71,16 @@ def editar_paciente(request, id):
         paciente.apellido = request.POST['apellido']
         paciente.fecha_nacimiento = request.POST['fecha_nacimiento']
         paciente.sexo = request.POST['sexo']
-
         actualizado_por = request.user
 
         # Guarda cambios
         paciente.save()
-
         # Regresa al listado
         return redirect('lista_pacientes')
 
     # Muestra el formulario con datos existentes
-    return render(
-        request,
-        'pacientes/editar_paciente.html',
-        {'paciente': paciente}
-    )
+    return render(request, "pacientes/editar_paciente.html", {"paciente": paciente})
+
 @login_required
 def eliminar_paciente(request, id):
 
@@ -99,6 +92,7 @@ def eliminar_paciente(request, id):
 
     # Regresa al listado
     return redirect('lista_pacientes')
+
 @login_required
 def lista_historias(request):
 
@@ -111,21 +105,35 @@ def lista_historias(request):
         'pacientes/lista_historias.html',
         {'historias': historias}
     )
+@login_required
 def ver_historia(request, id):
     historia = HistoriaClinica.objects.get(id=id)
     return render(request, "pacientes/ver_historia.html", {"historia": historia})
 @login_required
-def crear_historia(request):
-   
+def crear_historia(request, id=None):
+
+    paciente = None
+
+    # Si viene desde la lista de pacientes
+    if id:
+        paciente = get_object_or_404(
+            Paciente,
+            id=id
+        )
+
+        print("PACIENTE:", paciente)
 
     if request.method == 'POST':
-        
 
-        paciente = Paciente.objects.get(
-            id=request.POST['paciente']
-        )
-           
-         
+        # Si NO vino paciente por URL
+        if not paciente:
+
+            paciente = get_object_or_404(
+                Paciente,
+                id=request.POST['paciente']
+            )
+
+        # Validar que no exista otra historia
         if HistoriaClinica.objects.filter(
             paciente=paciente
         ).exists():
@@ -136,8 +144,8 @@ def crear_historia(request):
             )
 
             return redirect('lista_historias')
-        
-        # Crear historia
+
+        # Crear historia clínica
         HistoriaClinica.objects.create(
 
             fecha_apertura=request.POST['fecha_apertura'],
@@ -150,30 +158,33 @@ def crear_historia(request):
 
             antecedentes=request.POST['antecedentes'],
 
-            diagnostico_inicial=request.POST['diagnostico_inicial']
+            diagnostico_inicial=request.POST['diagnostico_inicial'],
 
+            creado_por=request.user
+
+        )
+
+        messages.success(
+            request,
+            "Historia clínica creada correctamente."
         )
 
         return redirect('lista_historias')
 
-    # Lista de pacientes disponibles
+    # Solo cargar pacientes sin historia
     pacientes = []
 
-    # Recorremos todos los pacientes
-    for paciente in Paciente.objects.all():
+    if not paciente:
 
-    # Si NO tiene historia clínica
-     if not HistoriaClinica.objects.filter(paciente=paciente).exists():
+        for p in Paciente.objects.all():
 
-        # Lo agregamos a la lista
-        pacientes.append(paciente)
+            if not HistoriaClinica.objects.filter(
+                paciente=p
+            ).exists():
 
-    return render(
-        request,
-        'pacientes/crear_historia.html',
-        {'pacientes': pacientes}
-    )
+                pacientes.append(p)
 
+    return render(request,'pacientes/crear_historia.html',{'paciente': paciente,'pacientes': pacientes})
 @login_required
 # Editar una historia clínica existente
 def editar_historia(request, id):
@@ -196,6 +207,8 @@ def editar_historia(request, id):
         historia.enfermedad_actual = request.POST['enfermedad_actual']
         historia.antecedentes = request.POST['antecedentes']
         historia.diagnostico_inicial = request.POST['diagnostico_inicial']
+        actualizado_por=request.user
+
 
         # Guarda los cambios
         historia.save()
@@ -289,7 +302,8 @@ def crear_evolucion(request, historia_id):
 
             peso=request.POST['peso'],
 
-            talla=request.POST['talla']
+            talla=request.POST['talla'],
+            profesional=request.user,
         )
 
         # Volver al listado de evoluciones
@@ -325,6 +339,7 @@ def editar_evolucion(request, evolucion_id):
         evolucion.saturacion = request.POST['saturacion']
         evolucion.peso = request.POST['peso']
         evolucion.talla = request.POST['talla']
+        actualizado_por=request.user
 
         evolucion.save()
 
