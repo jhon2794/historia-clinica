@@ -58,6 +58,16 @@
             color: white;
         }
 
+        .editar {
+          background: #f59e0b;
+          color: white;
+          padding: 6px 10px;
+          border-radius: 5px;
+          text-decoration: none;}
+
+         .editar:hover {
+          background: #d97706;}
+
         .ver:hover { background: #138496; }
         .eliminar:hover { background: #c82333; }
 
@@ -125,7 +135,7 @@
             <div class="actions">
 
                 <a class="ver"
-                   href="/evoluciones/ver/{{ e.id }}/">
+                   href="/evoluciones/ver/{{e.id }}/">
                    Ver
                 </a>
 
@@ -133,6 +143,10 @@
                    href="/evoluciones/eliminar/{{ e.id }}/"
                    onclick="return confirm('¿Eliminar esta evolución?');">
                    Eliminar
+                </a>
+                <a class="editar"
+                href="{% url 'editar_evolucion' e.id %}">
+                 Editar
                 </a>
 
             </div>

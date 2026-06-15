@@ -24,4 +24,5 @@ urlpatterns = [
     path('evoluciones/editar/<int:evolucion_id>/',views.editar_evolucion,name='editar_evolucion'),
     # Eliminar evolución
     path('evoluciones/eliminar/<int:evolucion_id>/',views.eliminar_evolucion,name='eliminar_evolucion'),
+    path('evoluciones/ver/<int:evolucion_id>/',views.ver_evolucion,name='ver_evolucion'),
 ]

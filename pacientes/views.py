@@ -2,6 +2,7 @@ from django.shortcuts import render ,redirect ,  get_object_or_404
 from django.contrib import messages
 from .models import Paciente , HistoriaClinica , Evolucion
 from django.contrib.auth.decorators import login_required
+from decimal import Decimal
 @login_required
 def inicio(request):
     return render(request, 'pacientes/inicio.html')
@@ -34,6 +35,14 @@ def crear_paciente(request):
 
     if request.method == "POST":
 
+        if Paciente.objects.filter(
+         identificacion=request.POST['identificacion']).exists():
+
+         messages.error(request,"Ya existe un paciente registrado con esa identificación.")
+
+         return render(request,'pacientes/crear_paciente.html',
+            {'request': request})
+
         tipo_documento = request.POST["tipo_documento"]
         identificacion = request.POST["identificacion"]
         nombre = request.POST["nombre"]
@@ -63,20 +72,28 @@ def editar_paciente(request, id):
 
     # Si enviaron el formulario
     if request.method == 'POST':
-         
+     if Paciente.objects.filter(identificacion=request.POST['identificacion']).exists():
+
+         messages.error(request,"Ya existe un paciente registrado con esa identificación.")
+
+         return render(request,
+            'pacientes/editar_paciente.html',
+            {'paciente': paciente}
+            )
+
         # Actualiza los datos
-        paciente.tipo_documento = request.POST['tipo_documento']
-        paciente.identificacion = request.POST['identificacion']
-        paciente.nombre = request.POST['nombre']
-        paciente.apellido = request.POST['apellido']
-        paciente.fecha_nacimiento = request.POST['fecha_nacimiento']
-        paciente.sexo = request.POST['sexo']
-        actualizado_por = request.user
+     paciente.tipo_documento = request.POST['tipo_documento']
+     paciente.identificacion = request.POST['identificacion']
+     paciente.nombre = request.POST['nombre']
+     paciente.apellido = request.POST['apellido']
+     paciente.fecha_nacimiento = request.POST['fecha_nacimiento']
+     paciente.sexo = request.POST['sexo']
+     paciente.actualizado_por = request.user
 
         # Guarda cambios
-        paciente.save()
+     paciente.save()
         # Regresa al listado
-        return redirect('lista_pacientes')
+     return redirect('lista_pacientes')
 
     # Muestra el formulario con datos existentes
     return render(request, "pacientes/editar_paciente.html", {"paciente": paciente})
@@ -98,6 +115,10 @@ def lista_historias(request):
 
     # Trae todas las historias clínicas
     historias = HistoriaClinica.objects.all()
+    identificacion = request.GET.get('identificacion')
+
+    if identificacion:
+     historias = historias.filter(paciente__identificacion__icontains=identificacion)
 
     # Envía las historias al HTML
     return render(
@@ -120,9 +141,6 @@ def crear_historia(request, id=None):
             Paciente,
             id=id
         )
-
-        print("PACIENTE:", paciente)
-
     if request.method == 'POST':
 
         # Si NO vino paciente por URL
@@ -207,7 +225,7 @@ def editar_historia(request, id):
         historia.enfermedad_actual = request.POST['enfermedad_actual']
         historia.antecedentes = request.POST['antecedentes']
         historia.diagnostico_inicial = request.POST['diagnostico_inicial']
-        actualizado_por=request.user
+        historia.actualizado_por=request.user
 
 
         # Guarda los cambios
@@ -264,82 +282,328 @@ def lista_evoluciones(request, historia_id):
     )
 @login_required
 def crear_evolucion(request, historia_id):
+# Buscar la historia clínica
+ historia = HistoriaClinica.objects.get(
+    id=historia_id
+)
 
-    # Buscar la historia clínica
-    historia = HistoriaClinica.objects.get(
-        id=historia_id
-    )
+# Si enviaron el formulario
+ if request.method == 'POST':
 
-    # Si enviaron el formulario
-    if request.method == 'POST':
+    try:
 
-        # Crear evolución
-        Evolucion.objects.create(
-
-            # Historia asociada
-            historia=historia,
-
-            # Datos de la evolución
-            fecha=request.POST['fecha'],
-
-            motivo_consulta=request.POST['motivo_consulta'],
-
-            observaciones=request.POST['observaciones'],
-
-            diagnostico=request.POST['diagnostico'],
-
-            conducta=request.POST['conducta'],
-
-            temperatura=request.POST['temperatura'],
-
-            frecuencia_cardiaca=request.POST['frecuencia_cardiaca'],
-
-            frecuencia_respiratoria=request.POST['frecuencia_respiratoria'],
-
-            presion_arterial=request.POST['presion_arterial'],
-
-            saturacion=request.POST['saturacion'],
-
-            peso=request.POST['peso'],
-
-            talla=request.POST['talla'],
-            profesional=request.user,
+        temperatura = float(
+            request.POST['temperatura']
         )
 
-        # Volver al listado de evoluciones
-        return redirect(
-            'lista_evoluciones',
-            historia_id=historia.id
+        frecuencia_cardiaca = int(
+            request.POST['frecuencia_cardiaca']
         )
 
-    # Mostrar formulario
-    return render(
-        request,
-        'pacientes/crear_evolucion.html',
-        {
-            'historia': historia
-        }
-    )
+        frecuencia_respiratoria = int(
+            request.POST['frecuencia_respiratoria']
+        )
+
+        saturacion = int(
+            request.POST['saturacion']
+        )
+
+        peso = float(
+            request.POST['peso']
+        )
+
+        talla = float(
+            request.POST['talla']
+        )
+
+    except ValueError:
+
+        messages.error(
+            request,
+            "Uno o más valores numéricos son inválidos."
+        )
+
+        return render(
+            request , 
+            'pacientes/crear_evolucion.html',
+            {'historia': historia})
+
+    if temperatura < 30 or temperatura > 45:
+
+        messages.error(
+            request,
+            "La temperatura debe estar entre 30 y 45 °C."
+        )
+
+        return render(
+            request , 
+            'pacientes/crear_evolucion.html',
+            {'historia': historia})
+
+    if frecuencia_cardiaca < 20 or frecuencia_cardiaca > 250:
+
+        messages.error(
+            request,
+            "La frecuencia cardíaca debe estar entre 20 y 250."
+        )
+
+        return render(
+            request , 
+            'pacientes/crear_evolucion.html',
+            {'historia': historia})
+
+    if frecuencia_respiratoria < 5 or frecuencia_respiratoria > 80:
+
+        messages.error(
+            request,
+            "La frecuencia respiratoria debe estar entre 5 y 80."
+        )
+
+        return render(
+            request , 
+            'pacientes/crear_evolucion.html',
+            {'historia': historia})
+
+    if saturacion < 0 or saturacion > 100:
+
+        messages.error(
+            request,
+            "La saturación debe estar entre 0 y 100."
+        )
+
+        return render(
+            request , 'pacientes/crear_evolucion.html',
+            {'historia': historia})
+
+    if peso < 1 or peso > 500:
+
+        messages.error(
+            request,
+            "El peso debe estar entre 1 y 500 kg."
+        )
+
+        return render(
+            request , 'pacientes/crear_evolucion.html',
+            {'historia': historia})
+        
+
+    if talla < 0.30 or talla > 3:
+
+        messages.error(
+            request,
+            "La talla debe estar entre 0.30 y 3 metros."
+        )
+
+        return render(
+            request , 'pacientes/crear_evolucion.html',
+            {'historia': historia})
+    # Crear evolución
+    Evolucion.objects.create(
+
+        historia=historia,
+
+        fecha=request.POST['fecha'],
+
+        motivo_consulta=request.POST['motivo_consulta'],
+
+        observaciones=request.POST['observaciones'],
+
+        diagnostico=request.POST['diagnostico'],
+
+        conducta=request.POST['conducta'],
+
+        temperatura=temperatura,
+
+        frecuencia_cardiaca=frecuencia_cardiaca,
+
+        frecuencia_respiratoria=frecuencia_respiratoria,
+
+        presion_arterial=request.POST['presion_arterial'],
+
+        saturacion=saturacion,
+
+        peso=peso,
+
+        talla=talla,
+
+        profesional=request.user,
+        )
+
+    return redirect(
+        'lista_evoluciones',
+        historia_id=historia.id)
+
+ return render(request,'pacientes/crear_evolucion.html',{'historia': historia})
 @login_required
 def editar_evolucion(request, evolucion_id):
 
-    evolucion = Evolucion.objects.get(id=evolucion_id)
+    evolucion = get_object_or_404(
+        Evolucion,
+        id=evolucion_id
+    )
 
     if request.method == 'POST':
 
+        try:
+
+            temperatura = Decimal(
+                request.POST['temperatura']
+            )
+
+            frecuencia_cardiaca = int(
+                request.POST['frecuencia_cardiaca']
+            )
+
+            frecuencia_respiratoria = int(
+                request.POST['frecuencia_respiratoria']
+            )
+
+            saturacion = int(
+                request.POST['saturacion']
+            )
+
+            peso = Decimal(
+                request.POST['peso']
+            )
+
+            talla = Decimal(
+                request.POST['talla']
+            )
+
+        except ValueError:
+
+            messages.error(
+                request,
+                "Los datos numéricos ingresados no son válidos."
+            )
+
+            return render(
+                request,
+                'pacientes/editar_evolucion.html',
+                {
+                    'evolucion': evolucion
+                }
+            )
+
+        # VALIDACIONES
+
+        if temperatura < 30 or temperatura > 45:
+
+            messages.error(
+                request,
+                "La temperatura debe estar entre 30 y 45 °C."
+            )
+
+            return render(
+                request,
+                'pacientes/editar_evolucion.html',
+                {
+                    'evolucion': evolucion
+                }
+            )
+
+        if frecuencia_cardiaca < 20 or frecuencia_cardiaca > 250:
+
+            messages.error(
+                request,
+                "La frecuencia cardíaca debe estar entre 20 y 250 lpm."
+            )
+
+            return render(
+                request,
+                'pacientes/editar_evolucion.html',
+                {
+                    'evolucion': evolucion
+                }
+            )
+
+        if frecuencia_respiratoria < 5 or frecuencia_respiratoria > 80:
+
+            messages.error(
+                request,
+                "La frecuencia respiratoria debe estar entre 5 y 80 rpm."
+            )
+
+            return render(
+                request,
+                'pacientes/editar_evolucion.html',
+                {
+                    'evolucion': evolucion
+                }
+            )
+
+        if saturacion < 0 or saturacion > 100:
+
+            messages.error(
+                request,
+                "La saturación debe estar entre 0 y 100%."
+            )
+
+            return render(
+                request,
+                'pacientes/editar_evolucion.html',
+                {
+                    'evolucion': evolucion
+                }
+            )
+
+        if peso < 1 or peso > 500:
+
+            messages.error(
+                request,
+                "El peso debe estar entre 1 y 500 kg."
+            )
+
+            return render(
+                request,
+                'pacientes/editar_evolucion.html',
+                {
+                    'evolucion': evolucion
+                }
+            )
+
+        if talla < Decimal('0.30') or talla > Decimal('3.00'):
+
+            messages.error(
+                request,
+                "La talla debe estar entre 0.30 y 3 metros."
+            )
+
+            return render(
+                request,
+                'pacientes/editar_evolucion.html',
+                {
+                    'evolucion': evolucion
+                }
+            )
+
+        # ACTUALIZAR DATOS
+
         evolucion.fecha = request.POST['fecha']
+
         evolucion.motivo_consulta = request.POST['motivo_consulta']
+
         evolucion.observaciones = request.POST['observaciones']
+
         evolucion.diagnostico = request.POST['diagnostico']
+
         evolucion.conducta = request.POST['conducta']
-        evolucion.temperatura = request.POST['temperatura']
-        evolucion.frecuencia_cardiaca = request.POST['frecuencia_cardiaca']
-        evolucion.frecuencia_respiratoria = request.POST['frecuencia_respiratoria']
+
+        evolucion.temperatura = temperatura
+
+        evolucion.frecuencia_cardiaca = frecuencia_cardiaca
+
+        evolucion.frecuencia_respiratoria = frecuencia_respiratoria
+
         evolucion.presion_arterial = request.POST['presion_arterial']
-        evolucion.saturacion = request.POST['saturacion']
-        evolucion.peso = request.POST['peso']
-        evolucion.talla = request.POST['talla']
-        actualizado_por=request.user
+
+        evolucion.saturacion = saturacion
+
+        evolucion.peso = peso
+
+        evolucion.talla = talla
+
+        evolucion.actualizado_por = request.user
 
         evolucion.save()
 
@@ -351,7 +615,9 @@ def editar_evolucion(request, evolucion_id):
     return render(
         request,
         'pacientes/editar_evolucion.html',
-        {'evolucion': evolucion}
+        {
+            'evolucion': evolucion
+        }
     )
 @login_required
 def eliminar_evolucion(request, evolucion_id):
@@ -365,4 +631,18 @@ def eliminar_evolucion(request, evolucion_id):
     return redirect(
         'lista_evoluciones',
         historia_id=historia_id
-    )    
+    )   
+@login_required
+def ver_evolucion(request, evolucion_id):
+
+    evolucion = get_object_or_404(
+    Evolucion,
+    id=evolucion_id)
+
+    return render(request,'pacientes/ver_evolucion.html',{'evolucion': evolucion})
+
+
+
+
+
+

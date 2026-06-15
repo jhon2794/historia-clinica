@@ -53,6 +53,15 @@
             text-align: center;
             margin-top: 10px;
         }
+        .error-box {
+         background: #fee2e2;
+         color: #991b1b;
+         border: 1px solid #fecaca;
+         padding: 12px;
+         border-radius: 5px;
+         margin-bottom: 15px;
+         font-weight: bold;}
+
     </style>
 </head>
 
@@ -64,6 +73,13 @@
 <div class="container">
 
     <h1>Crear Paciente</h1>
+    {% if messages %} {% for message in messages %} 
+    <div 
+    class="error-box"> {{ message }} 
+    </div> 
+    
+    {% endfor %} 
+    {% endif %}
 
     <form method="POST">
         {% csrf_token %}
@@ -82,19 +98,43 @@
 
         <!-- Identificación -->
         <label>Identificación:</label>
-        <input type="text" name="identificacion" required>
+        <input 
+        type="text" 
+        name="identificacion" 
+        value="{{ request.POST.identificacion|default:'' }}"
+        minlength="6"
+        maxlength="20"
+        pattern="[0-9]+"
+        title="Ingrese solo números y mínimo 6 dígitos"
+        required>
 
         <!-- Nombre -->
         <label>Nombre:</label>
-        <input type="text" name="nombre" required>
+        <input 
+        type="text" 
+        name="nombre" 
+        value="{{request.POST.nombre|default:'' }}"
+        minlength="2"
+        maxlength="50"
+        required>
 
         <!-- Apellido -->
         <label>Apellido:</label>
-        <input type="text" name="apellido" required>
+        <input 
+        type="text" 
+        name="apellido"
+        value="{{ request.POST.apellido|default:'' }}"
+        minlength="2"
+        maxlength="50" 
+        required>
 
         <!-- Fecha -->
         <label>Fecha de Nacimiento:</label>
-        <input type="date" name="fecha_nacimiento" required>
+        <input 
+        type="date" 
+        name="fecha_nacimiento" 
+        max="{% now 'Y-m-d' %}"
+        required>
 
         <!-- Sexo -->
         <label>Sexo:</label>

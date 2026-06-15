@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Editar Evolución</title>
+
+```
+<style>
+
+    body {
+        font-family: Arial;
+        background: #f4f6f8;
+        margin: 0;
+    }
+
+    .container {
+        width: 700px;
+        margin: 40px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        resize: none;
+        height: 80px;
+    }
+
+    .info-box {
+        background: #f1f3f5;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .error-box {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        padding: 12px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #2c7be5;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1a68d1;
+    }
+
+    .back {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        text-decoration: none;
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+{% include 'pacientes/navbar.html' %}
+
+<div class="container">
+
+```
+<h1>Editar Evolución</h1>
+
+<div class="info-box">
+    <strong>Paciente:</strong>
+    {{ evolucion.historia.paciente.nombre }}
+    {{ evolucion.historia.paciente.apellido }}
+    <br>
+    <strong>Historia Clínica:</strong>
+    #{{ evolucion.historia.id }}
+</div>
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div class="error-box">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <label>Fecha:</label>
+    <input
+        type="date"
+        name="fecha"
+        value="{% if request.POST.fecha %}{{ request.POST.fecha }}{% else %}{{ evolucion.fecha|date:'Y-m-d' }}{% endif %}"
+        required
+    >
+
+    <label>Motivo de Consulta:</label>
+    <textarea name="motivo_consulta">{% if request.POST.motivo_consulta %}{{ request.POST.motivo_consulta }}{% else %}{{ evolucion.motivo_consulta }}{% endif %}</textarea>
+
+    <label>Diagnóstico:</label>
+    <textarea name="diagnostico">{% if request.POST.diagnostico %}{{ request.POST.diagnostico }}{% else %}{{ evolucion.diagnostico }}{% endif %}</textarea>
+
+    <label>Observaciones:</label>
+    <textarea name="observaciones">{% if request.POST.observaciones %}{{ request.POST.observaciones }}{% else %}{{ evolucion.observaciones }}{% endif %}</textarea>
+
+    <label>Conducta:</label>
+    <textarea name="conducta">{% if request.POST.conducta %}{{ request.POST.conducta }}{% else %}{{ evolucion.conducta }}{% endif %}</textarea>
+
+    <label>Temperatura:</label>
+    <input
+        type="number"
+        step="0.1"
+        name="temperatura"
+        value="{% if request.POST.temperatura %}{{ request.POST.temperatura }}{% else %}{{ evolucion.temperatura }}{% endif %}"
+        required
+    >
+
+    <label>Frecuencia Cardiaca:</label>
+    <input
+        type="number"
+        name="frecuencia_cardiaca"
+        value="{% if request.POST.frecuencia_cardiaca %}{{ request.POST.frecuencia_cardiaca }}{% else %}{{ evolucion.frecuencia_cardiaca }}{% endif %}"
+        required
+    >
+
+    <label>Frecuencia Respiratoria:</label>
+    <input
+        type="number"
+        name="frecuencia_respiratoria"
+        value="{% if request.POST.frecuencia_respiratoria %}{{ request.POST.frecuencia_respiratoria }}{% else %}{{ evolucion.frecuencia_respiratoria }}{% endif %}"
+        required
+    >
+
+    <label>Presión Arterial:</label>
+    <input
+        type="text"
+        name="presion_arterial"
+        value="{% if request.POST.presion_arterial %}{{ request.POST.presion_arterial }}{% else %}{{ evolucion.presion_arterial }}{% endif %}"
+        required
+    >
+
+    <label>Saturación:</label>
+    <input
+        type="number"
+        name="saturacion"
+        value="{% if request.POST.saturacion %}{{ request.POST.saturacion }}{% else %}{{ evolucion.saturacion }}{% endif %}"
+        required
+    >
+
+    <label>Peso (kg):</label>
+    <input
+        type="number"
+        step="0.01"
+        name="peso"
+        value="{% if request.POST.peso %}{{ request.POST.peso }}{% else %}{{ evolucion.peso }}{% endif %}"
+        required
+    >
+
+    <label>Talla (m):</label>
+    <input
+        type="number"
+        step="0.01"
+        name="talla"
+        value="{% if request.POST.talla %}{{ request.POST.talla }}{% else %}{{ evolucion.talla }}{% endif %}"
+        required
+    >
+
+    <button type="submit">
+        Actualizar Evolución
+    </button>
+
+</form>
+
+<a
+    class="back"
+    href="/evoluciones/{{ evolucion.historia.id }}/"
+>
+    ← Volver a Evoluciones
+</a>
+```
+
+</div>
+
+</body>
+</html>

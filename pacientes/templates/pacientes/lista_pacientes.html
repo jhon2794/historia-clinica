@@ -158,20 +158,18 @@
                     <div class="acciones">
 
                         <!-- EDITAR -->
-                        <a href="/pacientes/editar/{{ paciente.id }}/" class="boton">
+                        <a href="/pacientes/editar/{{paciente.id}}/" class="boton">
                             Editar
                         </a>
-
-                        <!-- CREAR HISTORIA -->
-                        <a href="/historias/crear/" class="boton">
-                            Crear Historia
-                        </a>
-
-                        <!-- ELIMINAR -->
+                           <!-- ELIMINAR -->
                         <a href="/pacientes/eliminar/{{ paciente.id }}/"
                            class="boton boton-rojo"
                            onclick="return confirm('⚠️ ¿Seguro que deseas eliminar este paciente?')">
                             Eliminar
+                        </a>
+
+                        <a href="{% url 'crear_historia_paciente' paciente.id %}" class="boton">
+                           Crear Historia
                         </a>
 
                     </div>

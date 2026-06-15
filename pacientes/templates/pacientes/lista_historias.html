@@ -21,83 +21,149 @@
     font-weight:bold;
     margin-bottom:15px;
 ">
+
+ <style>
+    .buscador {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;}
+
+   .buscador input {
+    padding: 8px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;}
+
+   .boton {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;}
+
+    .boton:hover {
+    background: #1d4ed8;
+     }
+    </style>
+
     + Crear Historia Clínica
 </a>
-
+<!-- Buscador -->
+    <form method="GET" class="buscador">
+        <input
+            type="text"
+            name="identificacion"
+            placeholder="Buscar por identificación"
+            value="{{request.GET.identificacion}}"
+        >
+        <button type="submit" class="boton">
+            Buscar
+        </button>
+    </form>
 <hr>
 
 <table border="1" cellpadding="10" width="100%" style="
     border-collapse: collapse;
     font-family: Arial;
 ">
-
-    <thead style="background:#1e3a8a; color:white;">
-        <tr>
-            <th>Paciente</th>
-            <th>Fecha Apertura</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-
     <tbody>
+        <thead style="background:#1e3a8a; color:white;">
+    <tr>
+        <th>Identificación</th>
+        <th>Paciente</th>
+        <th>Fecha Apertura</th>
+        <th>Creado Por</th>
+        <th>Actualizado Por</th>
+        <th>Acciones</th>
+    </tr>
+</thead>
 
-        {% for historia in historias %}
+<tbody>
 
-        <tr style="background:white;">
+```
+{% for historia in historias %}
 
-            <td>
-                <strong>{{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</strong>
-            </td>
+<tr style="background:white;">
 
-            <td>
-                {{ historia.fecha_apertura }}
-            </td>
+    <td>{{historia.paciente.identificacion}}</td>
+    <td>
+        <strong>
+            {{ historia.paciente.nombre }}
+            {{ historia.paciente.apellido }}
+        </strong>
+    </td>
 
-            <td>
+    <td>
+        {{ historia.fecha_apertura }}
+    </td>
 
-                <div style="display:flex; flex-direction:column; gap:6px; min-width:160px;">
+    <td>
+        {% if historia.creado_por %}
+            {{ historia.creado_por.username }}
+        {% else %}
+            -
+        {% endif %}
+    </td>
 
-                    <!-- 👁 VER HISTORIA (NUEVO Y CORRECTO) -->
-                    <a href="/historias/ver/{{ historia.id }}/"
-                       style="
-                        background:#0ea5e9;
-                        color:white;
-                        padding:6px 10px;
-                        border-radius:5px;
-                        text-align:center;
-                        text-decoration:none;
-                       ">
-                        Ver Historia
-                    </a>
+    <td>
+        {% if historia.actualizado_por %}
+            {{ historia.actualizado_por.username }}
+        {% else %}
+            Sin actualizaciones
+        {% endif %}
+    </td>
 
-                    <!-- ✏ EDITAR (como lo tenías antes) -->
-                    <a href="/historias/editar/{{ historia.id }}/"
-                       style="
-                        background:#2563eb;
-                        color:white;
-                        padding:6px 10px;
-                        border-radius:5px;
-                        text-align:center;
-                        text-decoration:none;
-                       ">
-                        Editar Historia
-                    </a>
+    <td>
 
-                </div>
+        <div style="display:flex; flex-direction:column; gap:6px; min-width:160px;">
 
-            </td>
+            <a href="/historias/ver/{{ historia.id }}/"
+               style="
+                background:#0ea5e9;
+                color:white;
+                padding:6px 10px;
+                border-radius:5px;
+                text-align:center;
+                text-decoration:none;
+               ">
+                Ver Historia
+            </a>
 
-        </tr>
+            <a href="/historias/editar/{{ historia.id }}/"
+               style="
+                background:#2563eb;
+                color:white;
+                padding:6px 10px;
+                border-radius:5px;
+                text-align:center;
+                text-decoration:none;
+               ">
+                Editar Historia
+            </a>
 
-        {% empty %}
+        </div>
 
-        <tr>
-            <td colspan="3">
-                No hay historias clínicas registradas.
-            </td>
-        </tr>
+    </td>
 
-        {% endfor %}
+     </tr>
+
+     {% empty %}
+ 
+     <tr>
+     <td colspan="5">
+        No hay historias clínicas registradas.
+    </td>
+     tr>
+
+    
+     {% endfor %}
+     ```
+
+</tbody>
+
+
 
     </tbody>
 

@@ -47,6 +47,16 @@
         button:hover {
             background: #1a68d1;
         }
+
+        .error-box {
+         background: #fee2e2;
+         color: #991b1b;
+         border: 1px solid #fecaca;
+         padding: 12px;
+         border-radius: 5px;
+         margin-bottom: 15px;
+         font-weight: bold;}
+
     </style>
 </head>
 
@@ -59,10 +69,19 @@
 
     <h1>Editar Paciente</h1>
 
+    {% if messages %} {% for message in messages %} 
+    <div 
+    class="error-box"> {{ message }} 
+    </div> 
+    
+    {% endfor %} 
+    {% endif %}
+
+
     <form method="POST">
         {% csrf_token %}
 
-        <!-- Tipo Documento -->
+       [ <!-- Tipo Documento -->
         <label>Tipo de Documento:</label>
         <select name="tipo_documento" required>
 
@@ -87,28 +106,37 @@
         <label>Identificación:</label>
         <input type="text"
                name="identificacion"
-               value="{{ paciente.identificacion }}"
+               value="{{request.POST.identificacion|default:paciente.identificacion }}"
+               minlength="6"
+               maxlength="20"
+                pattern="[0-9]+"
+                title="Ingrese solo números y mínimo 6 dígitos"
                required>
 
         <!-- Nombre -->
         <label>Nombre:</label>
         <input type="text"
                name="nombre"
-               value="{{ paciente.nombre }}"
+               value="{{request.POST.nombre|default:paciente.nombre}}"
+                minlength="2"
+               maxlength="50"
                required>
 
         <!-- Apellido -->
         <label>Apellido:</label>
         <input type="text"
                name="apellido"
-               value="{{ paciente.apellido }}"
+               value="{{request.POST.apellido|default:paciente.apellido }}"
+                minlength="2"
+               maxlength="50" 
                required>
 
         <!-- Fecha -->
         <label>Fecha de Nacimiento:</label>
         <input type="date"
                name="fecha_nacimiento"
-               value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}"
+               value="{{request.POST.fecha_nacimiento|default:paciente.fecha_nacimiento|date:'Y-m-d' }}"
+               max="{% now 'Y-m-d' %}"
                required>
 
         <!-- Sexo -->

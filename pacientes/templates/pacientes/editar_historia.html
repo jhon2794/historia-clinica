@@ -1,35 +1,119 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-    <title>Editar Historia Clínica</title>
+
+```
+<title>Editar Historia Clínica</title>
+
+<style>
+
+    body{
+        font-family: Arial, sans-serif;
+        background:#f4f6f9;
+        margin:0;
+        padding:20px;
+    }
+
+    .contenedor{
+        max-width:900px;
+        margin:auto;
+    }
+
+    .encabezado{
+        background:#1e3a8a;
+        color:white;
+        padding:20px;
+        border-radius:10px;
+        margin-bottom:20px;
+    }
+
+    .card{
+        background:white;
+        padding:25px;
+        border-radius:10px;
+        box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .campo{
+        margin-bottom:15px;
+    }
+
+    label{
+        display:block;
+        font-weight:bold;
+        margin-bottom:5px;
+    }
+
+    input,
+    select,
+    textarea{
+        width:100%;
+        padding:10px;
+        box-sizing:border-box;
+    }
+
+    textarea{
+        min-height:100px;
+        resize:vertical;
+    }
+
+    .boton{
+        background:#2563eb;
+        color:white;
+        padding:10px 15px;
+        border:none;
+        border-radius:5px;
+        text-decoration:none;
+        cursor:pointer;
+    }
+
+    .boton:hover{
+        background:#1d4ed8;
+    }
+
+    .acciones{
+        margin-top:20px;
+    }
+
+</style>
+```
+
 </head>
+
 <body>
 
-    <h1>Editar Historia Clínica</h1>
+{% include 'pacientes/navbar.html' %}
 
-    <!-- Formulario para actualizar la historia -->
+<div class="contenedor">
+
+```
+<div class="encabezado">
+    <h1>Editar Historia Clínica</h1>
+</div>
+
+<div class="card">
+
     <form method="POST">
 
-        {% csrf_token %} 
+        {% csrf_token %}
 
-        <br>
+        <div class="campo">
 
-        <!-- Fecha de apertura -->
-        <div>
-            <label>Fecha Apertura:</label>
+            <label>Fecha Apertura</label>
+
             <input
                 type="date"
                 name="fecha_apertura"
                 value="{{ historia.fecha_apertura|date:'Y-m-d' }}"
-                required>
+                required
+            >
+
         </div>
 
-        <br>
+        <div class="campo">
 
-        <!-- Paciente -->
-        <div>
-
-            <label>Paciente:</label>
+            <label>Paciente</label>
 
             <select name="paciente">
 
@@ -43,6 +127,10 @@
                         {% endif %}
                     >
 
+                        {{ paciente.tipo_documento }}
+                        -
+                        {{ paciente.identificacion }}
+                        -
                         {{ paciente.nombre }}
                         {{ paciente.apellido }}
 
@@ -54,49 +142,74 @@
 
         </div>
 
-        <br>
+        <div class="campo">
 
-        <!-- Motivo consulta -->
-        <div>
-            <label>Motivo Consulta:</label>
+            <label>Motivo Consulta</label>
 
-            <textarea name="motivo_consulta">{{ historia.motivo_consulta }}</textarea>
+            <textarea
+                name="motivo_consulta"
+                required
+            >{{ historia.motivo_consulta }}</textarea>
+
         </div>
 
-        <br>
+        <div class="campo">
 
-        <!-- Enfermedad actual -->
-        <div>
-            <label>Enfermedad Actual:</label>
+            <label>Enfermedad Actual</label>
 
-            <textarea name="enfermedad_actual">{{ historia.enfermedad_actual }}</textarea>
+            <textarea
+                name="enfermedad_actual"
+                required
+            >{{ historia.enfermedad_actual }}</textarea>
+
         </div>
 
-        <br>
+        <div class="campo">
 
-        <!-- Antecedentes -->
-        <div>
-            <label>Antecedentes:</label>
+            <label>Antecedentes</label>
 
-            <textarea name="antecedentes">{{ historia.antecedentes }}</textarea>
+            <textarea
+                name="antecedentes"
+                required
+            >{{ historia.antecedentes }}</textarea>
+
         </div>
 
-        <br>
+        <div class="campo">
 
-        <!-- Diagnóstico inicial -->
-        <div>
-            <label>Diagnóstico Inicial:</label>
+            <label>Diagnóstico Inicial</label>
 
-            <textarea name="diagnostico_inicial">{{ historia.diagnostico_inicial }}</textarea>
+            <textarea
+                name="diagnostico_inicial"
+                required
+            >{{ historia.diagnostico_inicial }}</textarea>
+
         </div>
 
-        <br>
+        <div class="acciones">
 
-        <button type="submit">
-            Actualizar Historia
-        </button>
+            <button
+                type="submit"
+                class="boton"
+            >
+                Actualizar Historia
+            </button>
+
+            <a
+                href="{% url 'lista_historias' %}"
+                class="boton"
+            >
+                Volver
+            </a>
+
+        </div>
 
     </form>
+
+</div>
+```
+
+</div>
 
 </body>
 </html>

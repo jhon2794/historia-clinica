@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+```
+<title>Ver Evolución</title>
+
+<style>
+
+    body{
+        font-family: Arial, sans-serif;
+        background:#f4f6f9;
+        margin:0;
+        padding:20px;
+    }
+
+    .contenedor{
+        max-width:1000px;
+        margin:auto;
+    }
+
+    .encabezado{
+        background:#1e3a8a;
+        color:white;
+        padding:20px;
+        border-radius:10px;
+        margin-bottom:20px;
+    }
+
+    .card{
+        background:white;
+        padding:20px;
+        border-radius:10px;
+        box-shadow:0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom:20px;
+    }
+
+    .campo{
+        margin-bottom:15px;
+    }
+
+    .titulo{
+        color:#1e3a8a;
+        border-bottom:2px solid #e5e7eb;
+        padding-bottom:10px;
+        margin-bottom:20px;
+    }
+
+    .boton{
+        background:#2563eb;
+        color:white;
+        padding:10px 15px;
+        border-radius:5px;
+        text-decoration:none;
+    }
+
+    .boton:hover{
+        background:#1d4ed8;
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+{% include 'pacientes/navbar.html' %}
+
+<div class="contenedor">
+
+```
+<div class="encabezado">
+    <h1>Detalle de Evolución</h1>
+</div>
+
+<div class="card">
+
+    <h2 class="titulo">
+        Información General
+    </h2>
+  <div class="campo">
+        <strong>Peso:</strong>
+        {{ evolucion.peso }} kg
+    </div>
+
+    <div class="campo">
+        <strong>Talla:</strong>
+        {{ evolucion.talla }} m
+    </div>
+    
+    <div class="campo">
+        <strong>Fecha:</strong>
+        {{ evolucion.fecha }}
+    </div>
+
+    <div class="campo">
+        <strong>Motivo de Consulta:</strong><br>
+        {{ evolucion.motivo_consulta }}
+    </div>
+
+    <div class="campo">
+        <strong>Observaciones:</strong><br>
+        {{ evolucion.observaciones }}
+    </div>
+
+    <div class="campo">
+        <strong>Diagnóstico:</strong><br>
+        {{ evolucion.diagnostico }}
+    </div>
+
+    <div class="campo">
+        <strong>Conducta:</strong><br>
+        {{ evolucion.conducta }}
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h2 class="titulo">
+        Signos Vitales
+    </h2>
+
+    <div class="campo">
+        <strong>Temperatura:</strong>
+        {{ evolucion.temperatura }} °C
+    </div>
+
+    <div class="campo">
+        <strong>Frecuencia Cardíaca:</strong>
+        {{ evolucion.frecuencia_cardiaca }} lpm
+    </div>
+
+    <div class="campo">
+        <strong>Frecuencia Respiratoria:</strong>
+        {{ evolucion.frecuencia_respiratoria }} rpm
+    </div>
+
+    <div class="campo">
+        <strong>Presión Arterial:</strong>
+        {{ evolucion.presion_arterial }}
+    </div>
+
+    <div class="campo">
+        <strong>Saturación:</strong>
+        {{ evolucion.saturacion }} %
+    </div>
+
+
+</div>
+
+<div class="card">
+
+    <h2 class="titulo">
+        Auditoría
+    </h2>
+
+    <div class="campo">
+        <strong>Profesional:</strong>
+
+        {% if evolucion.profesional %}
+            {{ evolucion.profesional.username }}
+        {% else %}
+            No registrado
+        {% endif %}
+    </div>
+
+    <div class="campo">
+        <strong>Última Actualización:</strong>
+
+        {% if evolucion.actualizado_por %}
+            {{ evolucion.actualizado_por.username }}
+        {% else %}
+            Nunca editada
+        {% endif %}
+    </div>
+
+</div>
+
+<a
+    href="{% url 'lista_evoluciones' evolucion.historia.id %}"
+    class="boton"
+>
+    Volver a Evoluciones
+</a>
+```
+
+</div>
+
+</body>
+</html>
