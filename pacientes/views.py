@@ -72,7 +72,7 @@ def editar_paciente(request, id):
 
     # Si enviaron el formulario
     if request.method == 'POST':
-     if Paciente.objects.filter(identificacion=request.POST['identificacion']).exists():
+     if Paciente.objects.filter(identificacion=request.POST['identificacion']).exclude(id=paciente.id).exists():
 
          messages.error(request,"Ya existe un paciente registrado con esa identificación.")
 
